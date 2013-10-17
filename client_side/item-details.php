@@ -60,8 +60,18 @@
 	<div class="content_container">
 		<section>
 		<ul class="sitemap">
-			<li><a href="index.html">Home</a></li>
-			<li><a href="meat.html">>Meat</a></li>
+			<li><a href="index.php">Home</a></li>
+			<?php
+				include_once('../cgi-bin/lib/db-helper.php');
+				if (!is_numeric($_GET['pid']))
+					throw new Exception("invalid-pid");
+				$pid = $_GET['pid'];
+				
+				$catid = get_catid_by_pid($pid);
+				$catname = get_catname_by_catid($catid);
+				echo '<li>' . '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a></li>';
+			?>
+			<!--<li><a href="product.php?catid=">>Meat</a></li>!-->
 			<li class="active"><a href="#">>Item-details</a></li>
 		</ul>
 		<div id="item_detail">
