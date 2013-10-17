@@ -92,7 +92,6 @@
 			- prompt for input errors if any, then submit the form to admin-process.php (AJAX is not required)
 		-->
 		
-		<ul id="productList"></ul>
 	</section>
 
 <div class="clear"></div>
@@ -199,6 +198,7 @@
 				var prod = json[0];
 				el("prod_edit_name").value = prod.name;
 				el("prod_edit_price").value = prod.price;
+				el("prod_edit_description").value = prod.description;
 			}
 			);
 			
@@ -224,7 +224,7 @@
 
 	el('prod_edit_cancel').onclick = function() {
 		el('productEditPanel').hide();
-		el('productEditPanel').show();
+		el('productPanel').show();
 	}
 	
 })();
