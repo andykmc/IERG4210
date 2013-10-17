@@ -96,13 +96,8 @@
 					
 					/* Underconstruction */
 					foreach ($product_array as $product){
-<<<<<<< HEAD
-						echo '<li class="divide">';
-						echo	'<a class="product_img" href="item-details.html?pid=' . $product["pid"] .'">';
-=======
 						echo '<li>';
-						echo	'<a class="product_img" href="item-details.html?catid=' . $product["catid"] .'">';
->>>>>>> 4cae7b863e254d2ebbe94ae54469b3bbf11a728e
+						echo	'<a class="product_img" href="item-details.html?pid=' . $product["pid"] .'">';
 						echo 		'<img src="' . $product["imagedir"] . '" alt="' . $product["name"] .'" />';
 						echo	'</a>';
 						echo 	'<div class="product_info">';
