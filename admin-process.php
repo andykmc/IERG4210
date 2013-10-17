@@ -76,7 +76,7 @@ function ierg4210_prod_insert() {
 	$catid = $_POST["catid"];
 	if (!preg_match('/^[\w\-, ]+$/', $_POST['name']))
 		throw new Exception("invalid-product-name");
-	$prod_name = $_POST["name"];
+	$name = $_POST["name"];
 	if (!preg_match('/^\d+(\.\d{1,2})?$/', $_POST['price']))
 		throw new Exception("invalid-price");
 	$price = $_POST["price"];
