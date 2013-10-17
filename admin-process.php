@@ -113,7 +113,7 @@ function ierg4210_prod_insert() {
 
 // TODO: add other functions here to make the whole application complete
 function ierg4210_prod_fetchAllBy_catid() {
-	$catid = $_POST["catid"];
+	$catid = $_REQUEST["catid"];
 	// DB manipulation
 	global $db;
 	$db = ierg4210_DB();
@@ -122,7 +122,21 @@ function ierg4210_prod_fetchAllBy_catid() {
 		return $q->fetchAll();
 }
 
-
+//function ierg4210_prod_delete() {
+	//if (!is_numeric($_POST['pid']))
+		//throw new Exception("invalid-pid");
+	//$pid = $_POST['pid'];
+	// DB manipulation
+	//global $db;
+	//$db =ierg4210_DB();
+	
+	//$q = $db->prepare("DELETE FROM categories WHERE pid=(:pid)");
+	//if($q->execute(array(':pid'=>$pid)))
+		//return true;
+	//else
+	//	return 'Delete Failed';
+//}
+	
 
 
 
