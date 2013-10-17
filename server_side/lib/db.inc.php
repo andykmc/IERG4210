@@ -20,4 +20,7 @@ function ierg4210_DB() {
 	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 	return $db;
 }
+
+$image_wholedir_prefix = '/var/www/html/incl/img/';
+$image_webdir_prefix = 'incl/img/';
 ?>
