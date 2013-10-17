@@ -42,7 +42,7 @@
 		<legend>New Product</legend>
 		<form id="prod_insert" method="POST" action="cgi-bin/admin-process.php?action=prod_insert" enctype="multipart/form-data">
 			<label for="prod_insert_catid">Category *</label>
-			<div><select id="prod_insert_catid" name="catid" required="true"></select></div>
+			<div><select id="prod_insert_catid" name="catid" pattern="^[\w\- ]+$"></select></div>
 
 			<label for="prod_insert_name">Name *</label>
 			<div><input id="prod_insert_name" type="text" name="name" required="true" pattern="^[\w\- ]+$" /></div>

@@ -106,14 +106,15 @@ function ierg4210_prod_insert() {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
 		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
-		$image_name = $lastId . $extension;
+		$image_name = $lastId.$extension;
 		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
-		/* Underconstruction */
-			/* $q = $db->prepare("UPDATE products SET imagedir = '"'incl/img/(:image_name)'"';");
-			if(! $q->execute(array(':catid'=>$catid, ':name'=>$name, ':price'=>$price, ':description'=>$description))){
+			$image_dir = '/var/www/html/incl/img/'.$image_name;
+			global $db;
+			$db = ierg4210_DB();
+			$q = $db->prepare("UPDATE products SET imagedir = (:imagedir) WHERE pid=(:lastId)");
+			if(! $q->execute(array(':imagedir'=>$imagedir,':lastId'=>$lastId)){
 				throw new PDOException("error-product-insert");
-			} */
-		/* Underconstruction */	
+			} 
 			// redirect back to original page; you may comment it during debug
 			header('Location: ../admin.html');
 			exit();
@@ -219,6 +220,9 @@ function ierg4210_prod_edit() {
 			// redirect back to original page; you may comment it during debug
 			header('Location: ../admin.html');
 			exit();
+		}
+		else{
+			throw new Exception("Image failed to edit!");
 		}
 	}
 }
