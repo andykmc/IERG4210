@@ -123,9 +123,8 @@
 	function updateprodUI(catid){
 		var id=arguments[0];
 		myLib.get({action:'prod_fetchAllBy_catid',catid:id}, function(json){
-			el('productList').innerHTML="";
-			for (var listItems = [], i = 0, prod,cat_id; prod = json[i]; i++){
-				listItems.push('<li id="prod', parseInt(prod.pid), '"><span class="name">' , prod.name.escapeHTML() , '</span> <span id="cat', parseInt(prod.catid), '" class="delete">[Delete]</span> <span class="edit">[Edit]</span></li>');
+			for (var listItems = [], i = 0, prod; prod = json[i]; i++){
+				listItems.push('<li id="prod', parseInt(prod.pid), '"><span class="name">' , prod.name.escapeHTML() , '</span> <span id="cat' , parseInt(prod.catid) , '" class="delete">[Delete]</span> <span class="edit">[Edit]</span></li>');
 			}
 			el('productList').innerHTML = listItems.join('');
 		});
@@ -165,7 +164,6 @@
 		//handle the click on the category name
 		} else {
 			el('prod_insert_catid').value = id;
-			el('productList').innerHTML = "Loading...";
 			// populate the product list or navigate to admin.php?catid=<id>
 			updateprodUI(id);
 			//el('productList').innerHTML = '<li> Product 1 of "' + name + '" [Edit] [Delete]</li><li> Product 2 of "' + name + '" [Edit] [Delete]</li>';
@@ -175,23 +173,31 @@
 	el('productList').onclick = function(e){
 		if(e.target.tagName!= 'SPAN')
 			return false;
+		
 		var target = e.target,
 			parent = target.parentNode,
-			id = target.parentNode.id.replace(/^prod/,''),
 			catid = target.id.replace(/^cat/,''),
+			id = target.parentNode.id.replace(/^prod/,''),
 			name = target.parentNode.querySelector('.name').innerHTML;
 		
 		//handle the delete click
-		//if('delete' === target.className){
-			//confirm('Delete product: '+name+' \nConfirm?')&& myLib.post({action:'prod_delete',pid:id},function(json){
-				//alert('"' + name + '" is deleted successfully!');
-				//updateprodUI(catid);
-			//});
+		if('delete' === target.className){
+			confirm('Delete product: '+name+' \nConfirm?')&& myLib.post({action: 'prod_delete', pid: id},function(json){
+				if(json==true){
+				alert('"' + name + '" is deleted successfully!');
+				updateprodUI(catid);
+				}
+				else
+				alert("Error: "+json);
+			});
+		}
 		
 		//handle the edit click
-		if('edit'===e.target.className) {
+		else if('edit'===e.target.className) {
 			el('productPanel').hide();
 			el('productEditPanel').show();	
+			myLib.get({action:'prod_fetch', pid:id}, function)
+			
 		}
 	}	
 
