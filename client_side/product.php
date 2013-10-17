@@ -70,9 +70,9 @@
 				<?php
 					include_once('../cgi-bin/lib/db.inc.php');
 					
-					if (!is_numeric($_POST['catid']))
+					if (!is_numeric($_GET['catid']))
 						throw new Exception("invalid-catid");
-					$catid = $_POST['catid'];
+					$catid = $_GET['catid'];
 					
 					global $db;
 					$db = ierg4210_DB();
