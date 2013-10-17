@@ -75,8 +75,28 @@
 		<section>
 		<!--Current Location Indicator-->
 		<ul class="sitemap">
-			<li><a href="index.php">Home</a></li>
-			<li class="active"><a href="#">>Product</a></li>
+			<?php
+				include_once('../cgi-bin/lib/db.inc.php');
+					
+					if (!is_numeric($_GET['catid']))
+						throw new Exception("invalid-catid");
+					$catid = $_GET['catid'];
+					
+					global $db;
+					$db = ierg4210_DB();
+					$q = $db->prepare("SELECT * FROM categories where catid=(:catid);");
+					$cat_array;
+					if ($q->execute(array(':catid'=>$catid)))
+						$cat_array = $q->fetchAll();
+						
+					$cat = $cat_array[0];
+					echo '<li>';
+					echo '<a href="index.php">Home</a>';
+					echo '</li>';
+					echo '<li class="active"><a href="product.php?catid='.$cat["catid"].'">>'.$cat["name"].'</a></li>';
+			?>
+			<!--<li><a href="index.php">Home</a></li>
+			<li class="active"><a href="#">>Product</a></li>-->
 		</ul>
 		<div class="products_list"><!--procuct-list area-->
 			<ul>
