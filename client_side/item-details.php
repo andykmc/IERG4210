@@ -18,17 +18,30 @@
 				</ul>
 			</div>
 			<!--Main Logo/Name of the Web-->
-			<h1 class="logo"><a href="index.html">Food On-line</a></h1>
+			<h1 class="logo"><a href="index.php">Food On-line</a></h1>
 		</header>
 	</div>
 	
 	<div class="navigation_container">
 		<nav>
 			<ul class="navbar">
-				<li><a href="meat.html">FRESH ARRIVAL</a></li>
-				<li><a href="meat.html">MEAT</a></li>
-				<li><a href="meat.html">VEGETABLE</a></li>
-				<li><a href="meat.html">FRUIT</a></li>
+				<?php
+					include_once('../cgi-bin/lib/db.inc.php');
+					
+					global $db;
+					$db = ierg4210_DB();
+					$q = $db->prepare("SELECT * FROM categories;");
+					$cat_array;
+					if ($q->execute())
+						$cat_array = $q->fetchAll();
+					
+					foreach ($cat_array as $cat){
+						echo '<li>';
+						echo '<a href="product.php?catid='.$cat["catid"].'">'.$cat["name"].'</a>';
+						echo '</li>';
+					}
+						
+				?>
 			</ul>
 			<div class="cart"><a href="shoppingcart.html"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
@@ -61,6 +74,7 @@
 		<section>
 		<ul class="sitemap">
 			<li><a href="index.php">Home</a></li>
+<<<<<<< HEAD
 			<?php
 				include_once('../cgi-bin/lib/db-helper.php');
 				if (!is_numeric($_GET['pid']))
@@ -72,6 +86,9 @@
 				echo '<li>' . '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a></li>';
 			?>
 			<!--<li><a href="product.php?catid=">>Meat</a></li>!-->
+=======
+			<li><a href="meat.html">>Product</a></li>
+>>>>>>> bd6fd798ab8915e5de343a8eb4cd983952c719aa
 			<li class="active"><a href="#">>Item-details</a></li>
 		</ul>
 		<div id="item_detail">
