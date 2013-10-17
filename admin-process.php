@@ -71,19 +71,30 @@ function ierg4210_cat_delete() {
 // Therefore, after handling the request (DB insert and file copy), this function then redirects back to admin.html
 function ierg4210_prod_insert() {
 	// input validation or sanitization
-
+	if (!is_numeric($_POST['catid']))
+		throw new Exception("invalid-catid");
+	$catid = $_POST["catid"];
+	if (!preg_match('/^[\w\-, ]+$/', $_POST['name']))
+		throw new Exception("invalid-product-name");
+	$prod_name = $_POST["name"];
+	if (!preg_match('/^\d+(\.\d{1,2})?$/', $_POST['price']))
+		throw new Exception("invalid-price");
+	$price = $_POST["price"];
+	if (!preg_match('/^[\w\-,]$/', $_POST['description']))
+		throw new Exception("invalid-description");
+	$description = $_POST["description"];
+	
 	// DB manipulation
 	global $db;
 	$db = ierg4210_DB();
 	// TODO: complete the rest of the INSERT command
-	
-	
-	
-	
-	
+	$q = $db->prepare("INSERT INTO products (catid, name, price, description) VALUES (:catid, :name, :price, :description)");//pid not needed, since auto_increment
+	if(! $q->execute(array(':catid'=>$catid, ':name'=>$name, ':price'=>$price, ':description'=>$description))){
+		throw new PDOException("error-product-insert");
+	}
 	
 	// The lastInsertId() function returns the pid (primary key) resulted by the last INSERT command
-	//$lastId = $db->lastInsertId();
+	$lastId = $db->lastInsertId();
 
 	// Copy the uploaded file to a folder which can be publicly accessible at incl/img/[pid].jpg
 	if ($_FILES["file"]["error"] == 0
@@ -91,13 +102,12 @@ function ierg4210_prod_insert() {
 		//&& $_FILES["file"]["size"] < 5000000) {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
-		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $lastId . ".jpg")) {
-		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
+		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $lastId . ".jpg")) {
+		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
 			// redirect back to original page; you may comment it during debug
 			header('Location: ../admin.html');
 			exit();
 		}
-
 	}
 
 	// Only an invalid file will result in the execution below

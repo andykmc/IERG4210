@@ -48,7 +48,7 @@
 			<div><input id="prod_insert_name" type="text" name="name" required="true" pattern="^[\w\- ]+$" /></div>
 
 			<label for="prod_insert_price">Price *</label>
-			<div><input id="prod_insert_price" type="number" name="price" required="true" pattern="^[\d\.]+$" /></div>
+			<div><input id="prod_insert_price" type="number" name="price" required="true" pattern="^\d+(\.\d{1,2})?$" /></div>
 
 			<label for="prod_insert_description">Description</label>
 			<div><textarea id="prod_insert_description" name="description" pattern="^[\w\-, ]$"></textarea></div>
@@ -150,7 +150,7 @@
 				}
 				else
 					alert("Error:" + json);
-			    });
+			});
 		
 		// handle the edit click
 		} else if ('edit' === target.className) {
