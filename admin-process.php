@@ -138,7 +138,7 @@ function ierg4210_prod_delete() {
 	$pid = $_POST['pid'];
 	// DB manipulation
 	global $db;
-	$db =ierg4210_DB();
+	$db = ierg4210_DB();
 	
 	$q = $db->prepare("DELETE FROM products WHERE pid=(:pid)");
 	if($q->execute(array(':pid'=>$pid)))
@@ -147,6 +147,18 @@ function ierg4210_prod_delete() {
 		return 'Delete Failed';
 }
 	
+function ierg4210_prod_fetch(){
+	if(!is_numeric($_REQUEST['pid']))
+		throw new Exception("invalid-pid");
+	$pid = $_REQUEST['pid'];
+	//DB manipulation
+	global $db;
+	$db = ierg4210_DB();
+	
+	$q = $db->prepare("SELECT * FROM products WHERE pid(:pid)");
+	if($q->execute(array(':pid' => $pid)))
+		return $q->fetchAll();
+}
 
 
 

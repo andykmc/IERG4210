@@ -196,7 +196,12 @@
 		else if('edit'===e.target.className) {
 			el('productPanel').hide();
 			el('productEditPanel').show();	
-			myLib.get({action:'prod_fetch', pid:id}, function)
+			myLib.get({action:'prod_fetch', pid: id}, function(json){
+				var Item = json[0];
+				el("prod_edit_name").value = prod.name;
+				el("prod_edit_price").value = prod.price;
+			}
+			);
 			
 		}
 	}	
