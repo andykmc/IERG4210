@@ -1,11 +1,16 @@
 <?php
+/* Under construction, CANNOT be used at the moment */
+chdir(dirname(__FILE__));
 include_once('db.inc.php');
 function get_catid_by_pid($pid){
 	global $db;
 	$db = ierg4210_DB();
 	$q = $db->prepare("SELECT catid FROM products WHERE pid = (:pid);");
+	
+	$result;
 	if ($q->execute(array(':pid'=>$pid)))
-		return ($q->fetchAll())[0]["catid"];
+		$result = $q->fetchAll();
+	return $catid = $result;
 }
 
 function get_catname_by_catid($catid){

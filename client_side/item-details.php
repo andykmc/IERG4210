@@ -75,13 +75,26 @@
 		<ul class="sitemap">
 			<li><a href="index.php">Home</a></li>
 			<?php
-				include_once('../cgi-bin/lib/db-helper.php');
+				include_once('../cgi-bin/lib/db.inc.php');
+				
 				if (!is_numeric($_GET['pid']))
 					throw new Exception("invalid-pid");
 				$pid = $_GET['pid'];
 				
-				$catid = get_catid_by_pid($pid);
-				$catname = get_catname_by_catid($catid);
+				global $db;
+				$result;
+				$db = ierg4210_DB();
+				$q = $db->prepare("SELECT catid FROM products WHERE pid = (:pid);");
+				if ($q->execute(array(':pid'=>$pid)))
+					$result = $q->fetchAll();
+				$catid = $result[0]["catid"];
+				
+				$q = $db->prepare("SELECT * FROM categories WHERE catid = (:catid);");
+				if ($q->execute(array(':catid'=>$catid)))
+					$result = $q->fetchAll();
+				$catid = $result[0]["catid"];
+				$catname = $result[0]["name"];
+				
 				echo '<li>' . '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a></li>';
 			?>
 			<!--<li><a href="product.php?catid=">>Meat</a></li>!-->
