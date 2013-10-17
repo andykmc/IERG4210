@@ -155,7 +155,7 @@ function ierg4210_prod_fetch(){
 	global $db;
 	$db = ierg4210_DB();
 	
-	$q = $db->prepare("SELECT * FROM products WHERE pid(:pid)");
+	$q = $db->prepare("SELECT * FROM products WHERE pid=(:pid)");
 	if($q->execute(array(':pid' => $pid)))
 		return $q->fetchAll();
 }

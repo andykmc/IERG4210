@@ -48,7 +48,7 @@
 			<div><input id="prod_insert_name" type="text" name="name" required="true" pattern="^[\w\- ]+$" /></div>
 
 			<label for="prod_insert_price">Price *</label>
-			<div><input id="prod_insert_price" type="number" name="price" required="true" pattern="^\d+(\.\d{1,2})?$" /></div>
+			<div><input id="prod_insert_price" type="number" name="price" required="true" pattern="^[\d\.]+$" /></div>
 
 			<label for="prod_insert_description">Description</label>
 			<div><textarea id="prod_insert_description" name="description" pattern="^[\w\-, ]$"></textarea></div>
@@ -148,8 +148,8 @@
 					updateUI();
 				}
 				else
-					alert("Error:" + json);
-			});
+					alert("Error: " + json);
+			    });
 		
 		// handle the edit click
 		} else if ('edit' === target.className) {
@@ -197,7 +197,7 @@
 			el('productPanel').hide();
 			el('productEditPanel').show();	
 			myLib.get({action:'prod_fetch', pid: id}, function(json){
-				var Item = json[0];
+				var prod = json[0];
 				el("prod_edit_name").value = prod.name;
 				el("prod_edit_price").value = prod.price;
 			}
