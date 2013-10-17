@@ -108,9 +108,9 @@ function ierg4210_prod_insert() {
 		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
 		$image_name = $lastId.$extension;
 		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
-			$image_dir = '/var/www/html/incl/img/'.$image_name;
+			$image_dir = 'incl/img/'.$image_name;
 			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir) WHERE pid=(:lastId)");
-			if(! $q->execute(array(':imagedir'=>$image_dir, ':lastId'=>$lastId)){
+			if(! $q->execute(array(':imagedir'=>$image_dir, ':lastId'=>$lastId))){
 				throw new PDOException("error-product-insert");
 			} 
 			// redirect back to original page; you may comment it during debug
@@ -209,13 +209,19 @@ function ierg4210_prod_edit() {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
 		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpg'))
-		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
 		if (! unlink('/var/www/html/incl/img'.$pid.'.jpeg'))
+		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
 			unlink('/var/www/html/incl/img/'.$pid.'.gif');
 		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
-		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $pid . $extension)) {
+		$image_name = $pid.$extension;
+		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
 		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
 			// redirect back to original page; you may comment it during debug
+			$image_dir = 'incl/img/'.$image_name;
+			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir) WHERE pid=(:pid)");
+			if(! $q->execute(array(':imagedir'=>$image_dir, ':pid'=>$pid))){
+				throw new PDOException("error-product-insert");
+			} 
 			header('Location: ../admin.html');
 			exit();
 		}
