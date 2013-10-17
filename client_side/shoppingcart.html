@@ -24,11 +24,7 @@
 	
 	<div class="navigation_container">
 		<nav>
-			<ul class="navbar">
-				<li><a href="meat.html">FRESH ARRIVAL</a></li>
-				<li><a href="meat.html">MEAT</a></li>
-				<li><a href="meat.html">VEGETABLE</a></li>
-				<li><a href="meat.html">FRUIT</a></li>
+			<ul id="navbar">
 			</ul>
 			<div class="cart"><a href="#"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
@@ -95,5 +91,19 @@
 		</footer>
 	</div>
 </div>	
+<script type="text/javascript" src="incl/myLib.js"></script>
+<script type="text/javascript">
+(function(){
+	function updatenav() {
+		myLib.get({action:'cat_fetchall'},function(json){
+			for (var listItems = [],i = 0, cat; cat = json[i]; i++){
+				listItems.push('<li id="cat', parseInt(cat.catid) , '"><a href="meat.html">' , cat.name.escapeHTML() , '</a></li>');
+			}
+			el('navbar').innerHTML = listItems.join('');
+		});
+	}
+	updatenav();
+})();
+</script>
 </body>
 </html>	

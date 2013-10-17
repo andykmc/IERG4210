@@ -109,10 +109,8 @@ function ierg4210_prod_insert() {
 		$image_name = $lastId.$extension;
 		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
 			$image_dir = '/var/www/html/incl/img/'.$image_name;
-			global $db;
-			$db = ierg4210_DB();
-			$q = $db->prepare("UPDATE products SET imagedir = (:imagedir) WHERE pid=(:lastId)");
-			if(! $q->execute(array(':imagedir'=>$imagedir,':lastId'=>$lastId)){
+			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir) WHERE pid=(:lastId)");
+			if(! $q->execute(array(':imagedir'=>$image_dir, ':lastId'=>$lastId)){
 				throw new PDOException("error-product-insert");
 			} 
 			// redirect back to original page; you may comment it during debug
