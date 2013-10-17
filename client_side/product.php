@@ -97,11 +97,11 @@
 					/* Underconstruction */
 					foreach ($product_array as $product){
 						echo '<li>';
-						echo	'<a class="product_img" href="item-details.html?pid=' . $product["pid"] .'">';
+						echo	'<a class="product_img" href="item-details.php?pid=' . $product["pid"] .'">';
 						echo 		'<img src="' . $product["imagedir"] . '" alt="' . $product["name"] .'" />';
 						echo	'</a>';
 						echo 	'<div class="product_info">';
-						echo 		'<h2><a href="item-details.html?pid='. $product["pid"] . '">' . $product["name"] . '</a></h2>';
+						echo 		'<h2><a href="item-details.php?pid='. $product["pid"] . '">' . $product["name"] . '</a></h2>';
 						//echo 		'<p>Description</p>';
 						echo 	'</div>';
 						echo 	'<div class="price_info">';
