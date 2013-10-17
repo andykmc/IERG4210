@@ -72,7 +72,7 @@
 					
 					if (!is_numeric($_POST['catid']))
 						throw new Exception("invalid-catid");
-					$catid = $_POST['catid'];
+					$catid = $_GET['catid'];
 					
 					global $db;
 					$db = ierg4210_DB();
