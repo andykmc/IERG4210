@@ -51,7 +51,7 @@
 			<div><input id="prod_insert_price" type="number" name="price" required="true" pattern="^[\d\.]+$" /></div>
 
 			<label for="prod_insert_description">Description</label>
-			<div><textarea id="prod_insert_description" name="description" pattern="^[\w\-, ]$"></textarea></div>
+			<div><textarea id="prod_insert_description" name="description" pattern="^[\w\-, ]*$"></textarea></div>
 
 			Image *
 			<div><input type="file" name="file" required="true" accept="image/jpeg" /></div>
@@ -77,7 +77,7 @@
 				<div><input id="prod_edit_price" type="number" name="price" required="true" pattern="^\d+(\.\d{1,2})?$" /></div>
 
 				<label for="prod_edit_description">Description</label>
-				<div><textarea id="prod_edit_description" name="description" pattern="^[\w\-, ]$"></textarea></div>
+				<div><textarea id="prod_edit_description" name="description" pattern="^[\w\-, ]*$"></textarea></div>
 
 				Image *
 				<div><input type="file" name="file" required="true" accept="image/jpeg" /></div>
