@@ -85,7 +85,7 @@
 					foreach ($product_array as $product){
 						echo '<li class="divide"><a class="product_img" href="item-details.html"><img src="' . $product["imagedir"] . ' alt="product image" /></a>';
 						echo 	'<div class="product_info">';
-						echo 		'<h2><a href="item-details.html?catid='. $product["catid"] . '">Item1</a></h2>';
+						echo 		'<h2><a href="item-details.html?catid='. $product["catid"] . '">' . $product["name"] . '</a></h2>';
 						//echo 		'<p>Description</p>';
 						echo 	'</div>';
 						echo 	'<div class="price_info">';
