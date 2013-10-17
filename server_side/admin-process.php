@@ -98,8 +98,9 @@ function ierg4210_prod_insert() {
 
 	// Copy the uploaded file to a folder which can be publicly accessible at incl/img/[pid].jpg
 	if ($_FILES["file"]["error"] == 0
-		&& ($_FILES["file"]["type"] == "image/jpeg" || 
+		&& ($_FILES["file"]["type"] == "image/jpeg" ||
 			$_FILES["file"]["type"] == "image/gif" ||
+			$_FILES["file"]["type"] == "image/jpg" ||
 			$_FILES["file"]["type"] == "image/png")
 		//&& $_FILES["file"]["size"] < 5000000) {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
@@ -155,6 +156,7 @@ function ierg4210_prod_delete() {
 	$q = $db->prepare("DELETE FROM products WHERE pid=(:pid)");
 	if($q->execute(array(':pid'=>$pid))){
 		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpg'))
+		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpeg'))
 		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
 			unlink('/var/www/html/incl/img/'.$pid.'.gif');
 		return true;
@@ -175,6 +177,55 @@ function ierg4210_prod_fetch(){
 		return $q->fetchAll();
 }
 
+function ierg4210_prod_edit() {
+	//input validation or sanitization
+	if (!is_numeric($_POST['pid']))
+		throw new Exception("invalid-pid");
+	$pid = $_POST['pid'];
+	if (!preg_match('/^[\w\-, ]+$/', $_POST['name']))
+		throw new Exception("invalid-product-name");
+	$name = $_POST["name"];
+	if (!preg_match('/^\d+(\.\d{1,2})?$/', $_POST['price']))
+		throw new Exception("invalid-price");
+	$price = $_POST["price"];
+	if (!preg_match('/^[\w\-, ]*$/', $_POST['description']))
+		throw new Exception("invalid-description");
+	$description = $_POST["description"];
+	
+	// DB manipulation
+	global $db;
+	$db = ierg4210_DB();
+	$q = $db->prepare("UPDATE products SET name=(:name), price=(:price), description=(:description) WHERE pid=(:pid)"); 
+	if(! $q->execute(array(':name'=>$name, ':price'=>$price, ':description'=>$description, ':pid'=>$pid)))
+		throw new Exception("error-product-edit");
+	header('Location: ../admin.html');
+	
+	// Delete the original image
+	if ($_FILES["file"]["error"] == 0
+		&& ($_FILES["file"]["type"] == "image/jpeg" ||
+			$_FILES["file"]["type"] == "image/jpg"  ||
+			$_FILES["file"]["type"] == "image/png"  ||
+			$_FILES["file"]["type"] == "image/gif")
+		//&& $_FILES["file"]["size"] < 5000000) {
+		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
+		// Note: Take care of the permission of destination folder (hints: current user is apache)
+		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpg'))
+		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
+		if (! unlink('/var/www/html/incl/img'.$pid.'.jpeg'))
+			unlink('/var/www/html/incl/img/'.$pid.'.gif');
+		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
+		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $pid . $extension)) {
+		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
+			// redirect back to original page; you may comment it during debug
+			header('Location: ../admin.html');
+			exit();
+		}
+	}
+}
+	
+	
+	
+	
 
 
 
