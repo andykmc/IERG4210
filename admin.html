@@ -91,6 +91,8 @@
 			- the original values/image should be prefilled in the relevant elements (i.e. <input>, <select>, <textarea>, <img>)
 			- prompt for input errors if any, then submit the form to admin-process.php (AJAX is not required)
 		-->
+		
+		<ul id="productList"></ul>
 	</section>
 
 <div class="clear"></div>
@@ -158,6 +160,8 @@
 		
 		//handle the click on the category name
 		} else {
+			el('productPanel').show();
+			el('productEditPanel').hide();
 			el('prod_insert_catid').value = id;
 			// populate the product list or navigate to admin.php?catid=<id>
 			updateprodUI(id);
