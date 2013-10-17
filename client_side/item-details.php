@@ -66,7 +66,7 @@
 		</ul>
 		<div id="item_detail">
 			<?php
-				include_once('lib/db.inc.php');
+				include_once('../cgi-bin/lib/db.inc.php');
 				
 				if (!is_numeric($_GET['pid']))
 					throw new Exception("invalid-pid");
