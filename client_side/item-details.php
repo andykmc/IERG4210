@@ -74,7 +74,6 @@
 		<section>
 		<ul class="sitemap">
 			<li><a href="index.php">Home</a></li>
-<<<<<<< HEAD
 			<?php
 				include_once('../cgi-bin/lib/db-helper.php');
 				if (!is_numeric($_GET['pid']))
@@ -86,9 +85,6 @@
 				echo '<li>' . '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a></li>';
 			?>
 			<!--<li><a href="product.php?catid=">>Meat</a></li>!-->
-=======
-			<li><a href="meat.html">>Product</a></li>
->>>>>>> bd6fd798ab8915e5de343a8eb4cd983952c719aa
 			<li class="active"><a href="#">>Item-details</a></li>
 		</ul>
 		<div id="item_detail">
