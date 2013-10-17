@@ -20,13 +20,30 @@
 				</ul>
 			</div>
 			<!--Main Logo/Name of the Web-->
-			<h1 class="logo"><a href="index.html">Food On-line</a></h1>
+			<h1 class="logo"><a href="index.php">Food On-line</a></h1>
 		</header>
 	</div>
 	
 	<div class="navigation_container"><!--Navigation Bar-->
 		<nav>
-			<ul id="navbar">
+			<ul class="navbar">
+			<?php
+					include_once('../cgi-bin/lib/db.inc.php');
+					
+					global $db;
+					$db = ierg4210_DB();
+					$q = $db->prepare("SELECT * FROM categories;");
+					$cat_array;
+					if ($q->execute())
+						$cat_array = $q->fetchAll();
+					
+					foreach ($cat_array as $cat){
+						echo '<li>';
+						echo '<a href="product.php?catid='.$cat["catid"].'">'.$cat["name"].'</a>';
+						echo '</li>';
+					}
+						
+			?>
 			</ul>
 			<!--ShoppingCart-->
 			<div class="cart"><a href="shoppingcart.html"><span>0</span> ITEM / <span>$0.00</span></a>
@@ -59,16 +76,16 @@
 	<div class="content_container">
 		<section>
 			<ul class="sitemap"><!--Current Location Indicator-->
-				<li class="active"><a href="index.html">Home</a></li>
+				<li class="active"><a href="index.php">Home</a></li>
 			</ul>
 			<!--Slide Show-->
 			<div class="slider" id="slider">
 				<ul id="slides">
-					<li><a href="meat.html"><img src="images/4.jpg" alt="banner1" /></a></li>
-					<li><a href="meat.html"><img src="images/2.jpg" alt="banner2" /></a></li>
-					<li><a href="meat.html"><img src="images/3.jpg" alt="banner3" /></a></li>
-					<li><a href="meat.html"><img src="images/1.jpg" alt="banner4" /></a></li>
-					<li><a href="meat.html"><img src="images/5.jpg" alt="banner5" /></a></li>
+					<li><a href="product.php?catid=1"><img src="images/4.jpg" alt="banner1" /></a></li>
+					<li><a href="product.php?catid=1"><img src="images/2.jpg" alt="banner2" /></a></li>
+					<li><a href="product.php?catid=1"><img src="images/3.jpg" alt="banner3" /></a></li>
+					<li><a href="product.php?catid=1"><img src="images/1.jpg" alt="banner4" /></a></li>
+					<li><a href="product.php?catid=1"><img src="images/5.jpg" alt="banner5" /></a></li>
 				</ul>
 			</div>
 			<!--Content Slide-->
@@ -76,9 +93,9 @@
 				<div class="best_sell_products">
 					<h2>Best Sell</h2>
 					<ul>
-						<li><a href="meat.html"><img src="images/s-02.jpg" alt="Best Sell Product1" /></a></li>
-						<li><a href="meat.html"><img src="images/s-03.jpg" alt="Best Sell Product2" /></a></li>
-						<li><a href="meat.html"><img src="images/s-04.jpg" alt="Best Sell Product3" /></a></li>
+						<li><a href="product.php?catid=1"><img src="images/s-02.jpg" alt="Best Sell Product1" /></a></li>
+						<li><a href="product.php?catid=1"><img src="images/s-03.jpg" alt="Best Sell Product2" /></a></li>
+						<li><a href="product.php?catid=1"><img src="images/s-04.jpg" alt="Best Sell Product3" /></a></li>
 					</ul>
 				</div>
 				<div class="business_time">
@@ -88,9 +105,9 @@
 				<div class="special">
 					<h2>Special Favour</h2>
 					<ul>
-						<li><a href="meat.html"><img src="images/s-05.jpg" alt="Special Favour1" /></a></li>
-						<li><a href="meat.html"><img src="images/s-03.jpg" alt="Special Favour2" /></a></li>
-						<li><a href="meat.html"><img src="images/s-04.jpg" alt="Special Favour3" /></a></li>
+						<li><a href="product.php?catid=1"><img src="images/s-05.jpg" alt="Special Favour1" /></a></li>
+						<li><a href="product.php?catid=1"><img src="images/s-03.jpg" alt="Special Favour2" /></a></li>
+						<li><a href="product.php?catid=1"><img src="images/s-04.jpg" alt="Special Favour3" /></a></li>
 					</ul>
 				</div>
 			</div>
@@ -126,19 +143,5 @@
 		</footer>
 	</div>
 </div>
-<script type="text/javascript" src="incl/myLib.js"></script>
-<script type="text/javascript">
-(function(){
-	function updatenav() {
-		myLib.get({action:'cat_fetchall'},function(json){
-			for (var listItems = [],i = 0, cat; cat = json[i]; i++){
-				listItems.push('<li id="cat', parseInt(cat.catid) , '"><a href="meat.html">' , cat.name.escapeHTML() , '</a></li>');
-			}
-			el('navbar').innerHTML = listItems.join('');
-		});
-	}
-	updatenav();
-})();
-</script>
 </body>
 </html>	
