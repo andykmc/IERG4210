@@ -117,25 +117,25 @@ function ierg4210_prod_fetchAllBy_catid() {
 	// DB manipulation
 	global $db;
 	$db = ierg4210_DB();
-	$q = $db->prepare("SELECT pid, name FROM products WHERE catid=(:cid)");
+	$q = $db->prepare("SELECT * FROM products WHERE catid=(:cid)");
 	if ($q->execute(array(':cid' => $catid)))
 		return $q->fetchAll();
 }
 
-//function ierg4210_prod_delete() {
-	//if (!is_numeric($_POST['pid']))
-		//throw new Exception("invalid-pid");
-	//$pid = $_POST['pid'];
+function ierg4210_prod_delete() {
+	if (!is_numeric($_POST['pid']))
+		throw new Exception("invalid-pid");
+	$pid = $_POST['pid'];
 	// DB manipulation
-	//global $db;
-	//$db =ierg4210_DB();
+	global $db;
+	$db =ierg4210_DB();
 	
-	//$q = $db->prepare("DELETE FROM categories WHERE pid=(:pid)");
-	//if($q->execute(array(':pid'=>$pid)))
-		//return true;
-	//else
-	//	return 'Delete Failed';
-//}
+	$q = $db->prepare("DELETE FROM products WHERE pid=(:pid)");
+	if($q->execute(array(':pid'=>$pid)))
+		return true;
+	else
+		return 'Delete Failed';
+}
 	
 
 
