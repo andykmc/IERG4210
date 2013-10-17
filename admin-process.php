@@ -80,7 +80,7 @@ function ierg4210_prod_insert() {
 	if (!preg_match('/^\d+(\.\d{1,2})?$/', $_POST['price']))
 		throw new Exception("invalid-price");
 	$price = $_POST["price"];
-	if (!preg_match('/^[\w\-,]$/', $_POST['description']))
+	if (!preg_match('/^[\w\-, ]$/', $_POST['description']))
 		throw new Exception("invalid-description");
 	$description = $_POST["description"];
 	
