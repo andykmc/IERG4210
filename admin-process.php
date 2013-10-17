@@ -98,11 +98,14 @@ function ierg4210_prod_insert() {
 
 	// Copy the uploaded file to a folder which can be publicly accessible at incl/img/[pid].jpg
 	if ($_FILES["file"]["error"] == 0
-		&& ($_FILES["file"]["type"] == "image/jpeg" || $_FILES["file"]["type"] == "image/jpg")
+		&& ($_FILES["file"]["type"] == "image/jpeg" || 
+			$_FILES["file"]["type"] == "image/gif" ||
+			$_FILES["file"]["type"] == "image/png")
 		//&& $_FILES["file"]["size"] < 5000000) {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
-		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $lastId . ".jpg")) {
+		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
+		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $lastId . $extension)) {
 		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
 			// redirect back to original page; you may comment it during debug
 			header('Location: ../admin.html');
@@ -113,7 +116,10 @@ function ierg4210_prod_insert() {
 	// Only an invalid file will result in the execution below
 	
 	// TODO: remove the SQL record that was just inserted
-	
+	$q = $db->prepare("DELETE FROM products WHERE pid=(:pid)");
+	if(! $q->execute(array(':pid'=>$lastId))){
+		throw new PDOException("error-remove-invalid-insert");
+	}
 	
 	// To replace the content-type header which was json and output an error message
 	header('Content-Type: text/html; charset=utf-8');
@@ -141,9 +147,12 @@ function ierg4210_prod_delete() {
 	$db = ierg4210_DB();
 	
 	$q = $db->prepare("DELETE FROM products WHERE pid=(:pid)");
-	if($q->execute(array(':pid'=>$pid)))
+	if($q->execute(array(':pid'=>$pid))){
+		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpg'))
+		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
+			unlink('/var/www/html/incl/img/'.$pid.'.gif');
 		return true;
-	else
+	}else
 		return 'Delete Failed';
 }
 	
