@@ -105,8 +105,14 @@ function ierg4210_prod_insert() {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
 		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
-		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $lastId . $extension)) {
-		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
+		$image_name = $lastId . $extension;
+		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
+		/* Underconstruction */
+			/* $q = $db->prepare("UPDATE products SET imagedir = '"'incl/img/(:image_name)'"';");
+			if(! $q->execute(array(':catid'=>$catid, ':name'=>$name, ':price'=>$price, ':description'=>$description))){
+				throw new PDOException("error-product-insert");
+			} */
+		/* Underconstruction */	
 			// redirect back to original page; you may comment it during debug
 			header('Location: ../admin.html');
 			exit();
@@ -155,7 +161,7 @@ function ierg4210_prod_delete() {
 	}else
 		return 'Delete Failed';
 }
-	
+
 function ierg4210_prod_fetch(){
 	if(!is_numeric($_REQUEST['pid']))
 		throw new Exception("invalid-pid");
