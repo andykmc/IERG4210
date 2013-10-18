@@ -46,10 +46,10 @@
 			?>
 			</ul>
 			<!--ShoppingCart-->
-			<div class="cart"><a href="shoppingcart.html"><span>0</span> ITEM / <span>$0.00</span></a>
+			<div class="cart"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
 					<span class="small_arrow"></span>
-					<form action="shoppingcart.html" method="post">
+					<form action="shoppingcart.php" method="post">
 					<div class="chooseditem">
 						<div class="items">
 							<span>Item3</span>

@@ -43,10 +43,10 @@
 						
 				?>
 			</ul>
-			<div class="cart"><a href="shoppingcart.html"><span>0</span> ITEM / <span>$0.00</span></a>
+			<div class="cart"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
 					<span class="small_arrow"></span>
-					<form action="shoppingcart.html" method="post">
+					<form action="shoppingcart.php" method="post">
 					<div class="chooseditem">
 						<div class="items">
 							<span>Item3</span>
@@ -84,21 +84,23 @@
 				global $db;
 				$result;
 				$db = ierg4210_DB();
-				$q = $db->prepare("SELECT catid FROM products WHERE pid = (:pid);");
+				$q = $db->prepare("SELECT catid,name FROM products WHERE pid = (:pid);");
 				if ($q->execute(array(':pid'=>$pid)))
 					$result = $q->fetchAll();
 				$catid = $result[0]["catid"];
+				$item_name = $result[0]["name"];
 				
 				$q = $db->prepare("SELECT * FROM categories WHERE catid = (:catid);");
 				if ($q->execute(array(':catid'=>$catid)))
 					$result = $q->fetchAll();
-				$catid = $result[0]["catid"];
 				$catname = $result[0]["name"];
 				
-				echo '<li>' . '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a></li>';
+				echo '<li>';
+				echo '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a>';
+				echo '<li class="active">';
+				echo '<a href="item-details.php?pid='.$pid.'">>'.$item_name.'</a>';
+				echo '<li>';
 			?>
-			<!--<li><a href="product.php?catid=">>Meat</a></li>!-->
-			<li class="active"><a href="#">>Item-details</a></li>
 		</ul>
 		<div id="item_detail">
 			<?php
@@ -120,7 +122,6 @@
 				echo	'<img src="'. $product["imagedir"] .'" alt="'. $product["name"] .'" />';
 				echo '</div>';
 				echo '<div class="item_descrip">';
-				//echo '<span>Excellent Meat</span>';
 				echo 	'<h2>' . $product["name"] . '</h2>';
 				echo 	'<p>' . $product["description"] . '</p>';
 				echo	 '<div class="item_price">' . $product["price"] . '</div>';
@@ -148,35 +149,6 @@
 				echo	 '</div>';
 				echo '</div>';
 			?>
-			<!--<div class="item_photo"><img src="images/meat-3.jpg" alt="Product Image" />
-			</div>
-			<div class="item_descrip"><span>Excellent Meat</span>
-				<h2>WUHUA meat</h1>
-				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut.</p>
-				<div class="item_price">$56.33</div>
-				<div class="size_info">
-					<div class="bag_sel">
-						<label>Bag :</label>
-						<select>
-							<option>SELECT</option>
-							<option>Small</option>
-							<option>Medium</option>
-							<option>Large</option>
-						</select>
-					</div>
-					<div class="weight_sel">
-						<label>Color :</label>
-						<select>
-							<option>SELECT</option>
-							<option>Light</option>
-							<option>Heavy</option>
-						</select>
-					</div>
-				</div>
-				<div class="add_to_buttons">
-					<button class="add_cart">Add to Cart</button>
-				</div>
-			</div>!-->
 		</div>
 		</section>
 	</div>

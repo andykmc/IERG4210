@@ -44,10 +44,10 @@
 			?>
 			</ul>
 			<!--ShoppingCart-->
-			<div class="cart"><a href="shoppingcart.html"><span>0</span> ITEM / <span>$0.00</span></a>
+			<div class="cart"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
 					<span class="small_arrow"></span>
-					<form action="shoppingcart.html" method="post">
+					<form action="shoppingcart.php" method="post">
 					<div class="chooseditem">
 						<div class="items">
 							<span>Item3</span>
@@ -95,8 +95,6 @@
 					echo '</li>';
 					echo '<li class="active"><a href="product.php?catid='.$cat["catid"].'">>'.$cat["name"].'</a></li>';
 			?>
-			<!--<li><a href="index.php">Home</a></li>
-			<li class="active"><a href="#">>Product</a></li>-->
 		</ul>
 		<div class="products_list"><!--procuct-list area-->
 			<ul>
@@ -145,52 +143,7 @@
 					<div class="price_info">
 						<button class="price_add"><span class="pr_price">$56.33</span></button>
 					</div>
-				</li>
-				<li class="divide"><a class="product_img" href="item-details.html"><img src="images/meat-2.jpg" alt="product image" /></a>
-					<div class="product_info">
-						<h2><a href="item-details.html">Item2</a></h2>
-						<p>Description</p>
-					</div>
-					<div class="price_info">
-						<button class="price_add"><span class="pr_price">$56.33</span></button>
-					</div>
-				</li>
-				<li><a class="product_img" href="item-details.html"><img src="images/meat-3.jpg" alt="product image" /></a>
-					<div class="product_info">
-						<h2><a href="item-details.html">Item3</a></h2>
-						<p>Description</p>
-					</div>
-					<div class="price_info">
-						<button class="price_add"><span class="pr_price">$56.33</span></button>
-					</div>
-				</li>
-				<li><a class="product_img" href="item-details.html"><img src="images/meat-3.jpg" alt="product image" /></a>
-					<div class="product_info">
-						<h2><a href="item-details.html">Item4</a></h2>
-						<p>Description</p>
-					</div>
-					<div class="price_info">
-						<button class="price_add"><span class="pr_price">$56.33</span></button>
-					</div>
-				</li>
-				<li class="divide"><a class="product_img" href="item-details.html"><img src="images/meat-5.jpg" alt="product image" /></a>
-					<div class="product_info">
-						<h2><a href="item-details.html">Item5</a></h2>
-						<p>Description</p>
-					</div>
-					<div class="price_info">
-						<button class="price_add"><span class="pr_price">$56.33</span></button>
-					</div>
-				</li>
-				<li><a class="product_img" href="item-details.html"><img src="images/meat-6.jpg" alt="product image" /></a>
-					<div class="product_info">
-						<h2><a href="item-details.html">Item6</a></h2>
-						<p>Description</p>
-					</div>
-					<div class="price_info">
-						<button><span class="pr_price">$56.33</span></button>
-					</div>
-				</li>!-->
+				</li>-->
 			</ul>
 		</div>
 		<div class="ad"><!--Advertisement Area-->

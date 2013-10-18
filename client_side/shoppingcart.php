@@ -18,13 +18,30 @@
 				</ul>
 			</div>
 	
-			<h1 class="logo"><a href="index.html">Food On-line</a></h1>
+			<h1 class="logo"><a href="index.php">Food On-line</a></h1>
 		</header>
 	</div>
 	
 	<div class="navigation_container">
 		<nav>
-			<ul id="navbar">
+			<ul class="navbar">
+			<?php
+					include_once('../cgi-bin/lib/db.inc.php');
+					
+					global $db;
+					$db = ierg4210_DB();
+					$q = $db->prepare("SELECT * FROM categories;");
+					$cat_array;
+					if ($q->execute())
+						$cat_array = $q->fetchAll();
+					
+					foreach ($cat_array as $cat){
+						echo '<li>';
+						echo '<a href="product.php?catid='.$cat["catid"].'">'.$cat["name"].'</a>';
+						echo '</li>';
+					}
+						
+			?>
 			</ul>
 			<div class="cart"><a href="#"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
@@ -56,8 +73,8 @@
 	<div class="content_container">
 		<section>
 			<ul class="sitemap">
-				<li><a href="index.html">Home</a></li>
-				<li class="active"><a href="shoppingcart.html">>Shopping-Cart</a></li>
+				<li><a href="index.php">Home</a></li>
+				<li class="active"><a href="shoppingcart.php">>Shopping-Cart</a></li>
 			</ul>
 			<span class="underconstruct">The Page is still under construction!</span>
 		</section>
@@ -90,20 +107,6 @@
 			</div>
 		</footer>
 	</div>
-</div>	
-<script type="text/javascript" src="incl/myLib.js"></script>
-<script type="text/javascript">
-(function(){
-	function updatenav() {
-		myLib.get({action:'cat_fetchall'},function(json){
-			for (var listItems = [],i = 0, cat; cat = json[i]; i++){
-				listItems.push('<li id="cat', parseInt(cat.catid) , '"><a href="meat.html">' , cat.name.escapeHTML() , '</a></li>');
-			}
-			el('navbar').innerHTML = listItems.join('');
-		});
-	}
-	updatenav();
-})();
-</script>
+</div>
 </body>
 </html>	
