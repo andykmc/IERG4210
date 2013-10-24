@@ -43,31 +43,34 @@
 						
 			?>
 			</ul>
-			<!--ShoppingCart-->
-			<div class="cart"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
+			<!--ShoppingCart Start-->
+			<div class="cart-toggle"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
 				<div class="cart_down">
 					<span class="small_arrow"></span>
 					<form action="shoppingcart.php" method="post">
-					<div class="chooseditem">
-						<div class="items">
-							<span>Item3</span>
-							<div class="quantity">Quantity :
-							<input type="number" name="quantity" min="1" />
+						<ul id="cart">
+						</ul>
+						<!--<div class="chooseditem">
+							<div class="items">
+								<span>Item3</span>
+								<div class="quantity">Quantity :
+								<input type="number" name="quantity" min="1" />
+								</div>
 							</div>
-						</div>
-						<div class="items more">
-							<span>Item1</span>
-							<div class="quantity">Quantity :
-							<input type="number" name="quantity" min="1" />
+							<div class="items more">
+								<span>Item1</span>
+								<div class="quantity">Quantity :
+								<input type="number" name="quantity" min="1" />
+								</div>
 							</div>
+						</div>!-->
+						<div class="cart_bottom">
+							<input type="submit" value="Checkout" class="checkout">
 						</div>
-					</div>
-					<div class="cart_bottom">
-						<input type="submit" value="Checkout" class="checkout">
-					</div>
 					</form>
 				</div>
 			</div>
+			<!--ShoppingCart End-->
 		</nav>
 	</div>
 	
@@ -181,6 +184,8 @@
 			</div>
 		</footer>
 	</div>
-</div>	
+</div>
+<script type="text/javascript" src="incl/myLib.js"></script>
+<script type="text/javascript" src="incl/ui.js"></script>
 </body>
 </html>

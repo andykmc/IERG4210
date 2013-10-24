@@ -67,19 +67,19 @@ nav .navbar li a:hover{
 color:#FFF;
 background:#f38256;
 }
-nav .cart{
+nav .cart-toggle{
 float:right;
 margin:5px 0px 3px 0px;
 padding:14px 10px 14px 40px;
 background:url(../images/cart_icon.png) no-repeat 7px;
 position:relative;
 }
-nav .cart a{
+nav .cart-toggle a{
 font-size:15px;
 color:#544f4b;
 text-decoration:none;
 }
-nav .cart span{
+nav .cart-toggle span{
 color:#f38256;
 }
 .cart_down{
@@ -105,30 +105,30 @@ left:290px;
 top:-10px;
 z-index:5;
 }
-.cart .chooseditem{
+/* .cart-toggle .chooseditem{
 width:340px;
 margin-left:5px;
 margin-top:10px;
 border-bottom:1px #f38256 solid;
 float:left;
 }
-.cart .chooseditem .items{
+.cart-toggle .chooseditem .items{
 width:340px;
 float:left;
 }
-.cart .chooseditem .more{
+.cart-toggle .chooseditem .more{
 width:340px;
 border-top:1px #d6d6d6 solid;
 margin-top:10px;
 padding:10px 0px;
 }
-.cart .chooseditem span{
+.cart-toggle .chooseditem span{
 float:left;
 padding-left:10px;
 }
-.cart .chooseditem .quantity{
+.cart-toggle .chooseditem .quantity{
 float:right;
-}
+} */
 .cart_down .cart_bottom{
 padding:5px 0px;
 display:inline-block;
@@ -145,7 +145,7 @@ cursor:pointer;
 font-weight:bold;
 font-size:11px;
 }
-nav .cart:hover .cart_down{
+nav .cart-toggle:hover .cart_down{
 display:block;
 }
 /*slideshow*/

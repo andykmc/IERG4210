@@ -1,5 +1,5 @@
 /* 
- * IERG4210 Web Programming and Security (2012 Fall) - myLib.js
+ * IERG4210 Web Programming and Security (2011 Fall) - myLib.js
  * This file serves as a javascript library that is useful across a website. You're not 
  * expected to change this file. Instead, you should create your own Javascript file.
  */
@@ -111,7 +111,7 @@ window.el = function(A) {
 	// To get some content in JSON format with AJAX
 	myLib.processJSON = function(url, param, successCallback, opt) {
 		opt = opt || {};
-		opt.url = url || 'admin-process.php';
+		opt.url = url || 'cgi-bin/admin-process.php';
 		opt.method = opt.method || 'GET';
 		if (param)
 			opt.data = encodeParam(param);
@@ -128,23 +128,12 @@ window.el = function(A) {
 	myLib.get = function(param, successCallback) {
 		param = param || {};
 		param.rnd =  new Date().getTime(); // to avoid caching in IE
-		myLib.processJSON('admin-process.php?' + encodeParam(param), null, successCallback);
+		myLib.processJSON('cgi-bin/admin-process.php?' + encodeParam(param), null, successCallback);
 	};
 	// To send an action to the admin-process.php over AJAX
 	myLib.post = function(param, successCallback) {
-		myLib.processJSON('admin-process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
+		myLib.processJSON('cgi-bin/admin-process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
 	};
-	// To get some content in JSON format with AJAX from the default process.php?rnd=<currentTime>
-	myLib.get2 = function(param, successCallback) {
-		param = param || {};
-		param.rnd =  new Date().getTime(); // to avoid caching in IE
-		myLib.processJSON('process.php?' + encodeParam(param), null, successCallback);
-	};
-	// To send an action to the process.php over AJAX
-	myLib.post2 = function(param, successCallback) {
-		myLib.processJSON('process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
-	};
-
 
 	// To validate if a form passes the client-side restrictions
 	myLib.validate = function(form) {
@@ -178,7 +167,7 @@ window.el = function(A) {
 	myLib.submit = function(form, successCallback) {
 		myLib.validate(form) && myLib.ajax({
 			method: 'POST',
-			url: form.getAttribute('action') || 'admin-process.php',
+			url: form.getAttribute('action') || 'cgi-bin/admin-process.php',
 			data: new formData(form).toString(),
 			success: function(json){
 				json = JSON.parse(json);
