@@ -44,11 +44,12 @@
 				?>
 			</ul>
 			<!--ShoppingCart Start-->
-			<div class="cart-toggle"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
+			<div class="cart-toggle"><a href="shoppingcart.php"><span>$</span><span id="cartTotal">0</span></a>
 				<div class="cart_down">
 					<span class="small_arrow"></span>
 					<form action="shoppingcart.php" method="post">
 						<ul id="cart">
+							No items!
 						</ul>
 						<!--<div class="chooseditem">
 							<div class="items">
@@ -149,7 +150,7 @@
 				echo		'</div>';
 				echo 	'</div>';
 				echo	 '<div class="add_to_buttons">';
-				echo		'<button class="add_cart">Add to Cart</button>';
+				echo		'<button class="add_cart" onclick="ui.cart.add('. $pid .')">Add to Cart</button>';
 				echo	 '</div>';
 				echo '</div>';
 			?>

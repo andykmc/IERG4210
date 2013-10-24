@@ -44,11 +44,12 @@
 			?>
 			</ul>
 			<!--ShoppingCart Start-->
-			<div class="cart-toggle"><a href="shoppingcart.php"><span>0</span> ITEM / <span>$0.00</span></a>
+			<div class="cart-toggle"><a href="shoppingcart.php"><span>$</span><span id="cartTotal">0</span></a>
 				<div class="cart_down">
 					<span class="small_arrow"></span>
 					<form action="shoppingcart.php" method="post">
 						<ul id="cart">
+							No items!
 						</ul>
 						<!--<div class="chooseditem">
 							<div class="items">

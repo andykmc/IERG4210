@@ -7,7 +7,7 @@
 	}
 	var e = window.myLib = window.myLib || {};
 	e.post2 = function(b, a) {
-		e.processJSON("process.php?rnd=" + (new Date).getTime(), b, a, {
+		e.processJSON("cgi-bin/process.php?rnd=" + (new Date).getTime(), b, a, {
 			method: "POST"
 		})
 	};
@@ -21,8 +21,8 @@
 	b.getSavedStore = function() {
 		c = (c = window.localStorage.getItem("cart_storage")) ? JSON.parse(c) : {}
 	};
-	b.add = function(d) {
-		b.update(d, (c[d] || 0) + 1)
+	b.add = function(pid) {
+		b.update(pid, (c[pid] || 0) + 1)
 	};
 	b.setVisibility = function(b) {
 		var a = document.querySelector(".cartList").classList;
@@ -31,10 +31,10 @@
 	b.toggleVisibility = function() {
 		document.querySelector(".cartList").classList.toggle("display")
 	};
-	b.update = function(d, a) {
+	b.update = function(pid, qty) {
 		var e = !1,
-		a = parseInt(a);
-		0 == a ? delete c[d] : 0 > a || (e = c[d] ? !1 : !0, c[d] = a);
+		qty = parseInt(qty);
+		0 == qty ? delete c[pid] : 0 > qty || (e = c[pid] ? !1 : !0, c[pid] = qty);
 		window.localStorage.setItem("cart_storage", JSON.stringify(c));
 		b.display(e)
 	};
