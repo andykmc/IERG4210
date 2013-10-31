@@ -5,6 +5,7 @@ input[type=text],input[type=number],select,textarea{width:200px}
 
 #categoryPanel,#categoryEditPanel{float:left;width:350px;border-right:1px solid #CCC}
 #productPanel,#productEditPanel{float:left;padding-left:10px}
+#prod_edit_img{width:200px;height:200px;}
 
 #categoryList span{cursor:pointer;text-decoration:underline;color:#00F}
 #categoryList span:hover{text-decoration:none}

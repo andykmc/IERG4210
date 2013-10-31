@@ -100,6 +100,8 @@
 				el("prod_edit_price").value = prod.price;
 				el("prod_edit_description").value = prod.description;
 				el("prod_edit_pid").value=prod.pid;
+				el("prod_edit_img").src=prod.imagedir;
+				el("prod_edit_img").alt=prod.name;
 			}
 			);
 			

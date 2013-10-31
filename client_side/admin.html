@@ -80,7 +80,9 @@
 				<div><textarea id="prod_edit_description" name="description" pattern="^[\w\-, ]*$"></textarea></div>
 
 				Image
-				<div><input type="file" name="file" accept="image/jpeg" /></div>
+				<div><input type="file" name="file" accept="image/jpeg" />
+				<img id="prod_edit_img" />
+				</div>
 				<input type="hidden" id="prod_edit_pid" name="pid" />
 				<input type="submit" value="Submit" /> <input type="button" id="prod_edit_cancel" value="Cancel" />
 			</form>
