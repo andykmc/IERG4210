@@ -7,75 +7,10 @@
 </head>
 	
 <body>
-<div class="page">
-	<div class="header_container">
-		<header>
-			<div class="top_bar"><!--Top Links-->
-				<ul class="top_links">
-					<li><a href="#">FREE SHIPPING ABOVE HK$150</a></li>
-					<li><a href="#">15 DAY RETURN</a></li>
-					<li><a href="#">+852-110|FAQ</a></li>
-				</ul>
-			</div>
-			<!--Main Logo/Name of the Web-->
-			<h1 class="logo"><a href="index.php">Food On-line</a></h1>
-		</header>
-	</div>
 	
-	<div class="navigation_container">
-		<nav>
-			<ul class="navbar"><!--Navigation Bar-->
-			<?php
-					include_once('../cgi-bin/lib/db.inc.php');
-					
-					global $db;
-					$db = ierg4210_DB();
-					$q = $db->prepare("SELECT * FROM categories;");
-					$cat_array;
-					if ($q->execute())
-						$cat_array = $q->fetchAll();
-					
-					foreach ($cat_array as $cat){
-						echo '<li>';
-						echo '<a href="product.php?catid='.$cat["catid"].'">'.$cat["name"].'</a>';
-						echo '</li>';
-					}
-						
-			?>
-			</ul>
-			<!--ShoppingCart Start-->
-			<div class="cart-toggle"><a href="shoppingcart.php"><span>$</span><span id="cartTotal">0</span></a>
-				<div class="cart_down">
-					<span class="small_arrow"></span>
-					<form action="shoppingcart.php" method="post">
-						<ul id="cart">
-							No items!
-						</ul>
-						<!--<div class="chooseditem">
-							<div class="items">
-								<span>Item3</span>
-								<div class="quantity">Quantity :
-								<input type="number" name="quantity" min="1" />
-								</div>
-							</div>
-							<div class="items more">
-								<span>Item1</span>
-								<div class="quantity">Quantity :
-								<input type="number" name="quantity" min="1" />
-								</div>
-							</div>
-						</div>!-->
-						<div class="cart_bottom">
-							<input type="submit" value="Checkout" class="checkout">
-						</div>
-					</form>
-				</div>
-			</div>
-			<!--ShoppingCart End-->
-		</nav>
-	</div>
+	<?php include_once('header.php'); ?>
 	
-	<div class="content_container">
+	<article>
 		<section>
 		<!--Current Location Indicator-->
 		<ul class="sitemap">
@@ -123,69 +58,28 @@
 						echo 		'<img src="' . $product["imagedir"] . '" alt="' . $product["name"] .'" />';
 						echo	'</a>';
 						echo 	'<div class="product_info">';
-						echo 		'<h2><a href="item-details.php?pid='. $product["pid"] . '">' . $product["name"] . '</a></h2>';
-						//echo 		'<p>Description</p>';
-						echo 	'</div>';
+						echo 		'<span><a href="item-details.php?pid='. $product["pid"] . '">' . $product["name"] . '</a></span>';
 						echo 	'<div class="price_info">';
-						echo		'<button class="price_add"><span class="pr_price">$'. $product["price"] .'</span></button>';
+						echo		'<span>$'. $product["price"] .'</span>';
 						echo	'</div>';
+						echo 	'</div>';
+						echo	'<div class="add_to_buttons">';
+						echo	'<button class="add_cart" onclick="ui.cart.add('. $product["pid"] .')">Add to Cart</button>';
+						echo  	'</div>';
 						echo '</li>';
 						
-						/* echo 'pid:' . $product["pid"];
-						echo 'catid:' . $product["catid"];
-						echo 'name:' . $product["name"];
-						echo 'price:' . $product["price"];
-						echo 'description:' . $product["description"];
-						echo '<br>'; */
 					}
 				?>
-				<!-- <li><a class="product_img" href="item-details.html"><img src="images/meat-1.jpg" alt="product image" /></a>
-					<div class="product_info">
-						<h2><a href="item-details.html">Item1</a></h2>
-						<p>Description</p>
-					</div>
-					<div class="price_info">
-						<button class="price_add"><span class="pr_price">$56.33</span></button>
-					</div>
-				</li>-->
 			</ul>
 		</div>
 		<div class="ad"><!--Advertisement Area-->
 			<aside><img src="images/ad.jpg" alt="advertisement" /></aside>
 		</div>
 		</section>
-	</div>
+	</article>
 		
+	<?php readfile('footer.html'); ?>	
 		
-		<div class="footer_container">
-		<!--Footer Info-->
-		<footer>
-			<div class="footer_links">
-				<ul>
-					<li><span>Shop By Product</span></li>
-					<li><span>Shop By Price</span></li>
-					<li class="seperator"><span>Support</span>
-						<ul>
-							<li><a href="#">Become a Dealer</a></li>
-							<li><a href="#">Find a Dealer</a></li>
-							<li><a href="#">Get a Catalog</a></li>
-							<li><a href="#">Returns</a></li>
-						</ul>
-					</li>
-					<li><span>News and Events</span>
-						<ul>
-							<li><a href="#">Latest News</a></li>
-							<li><a href="#">Current Events</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div class="bottom_info">
-			Copyright &copy; 2013 Food On_line. All Rights Reserved.<img src="images/payment_info.jpg" alt="payment_info" />
-			</div>
-		</footer>
-	</div>
-</div>
 <script type="text/javascript" src="incl/myLib.js"></script>
 <script type="text/javascript" src="incl/ui.js"></script>
 </body>

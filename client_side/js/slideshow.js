@@ -1,7 +1,7 @@
 ﻿$(document).ready(function(){                
 		var FocusNum=new Object();
 		FocusNum.Id="slider";	/*Locate the position to perform slide effect*/
-		FocusNum.Time=3000;		/*Set the waiting time. Units:ms*/
+		FocusNum.Time=7000;		/*Set the waiting time. Units:ms*/
 		$("#"+FocusNum.Id).css("position","relative");		/*set the slider's css position property to be relative*/
 		$("#"+FocusNum.Id+" ul").attr("id","slides");		/*assign the id slides to the ul element*/
 		var Li="#"+FocusNum.Id+" li";
