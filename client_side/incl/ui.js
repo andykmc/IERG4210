@@ -1,9 +1,8 @@
 (function() {
 	function j(d) {
-		for (var a = [], b = 0, e = 0, g = 1, h, i, f; f = d[e]; e++, g++) c[f.pid] && (a.push("<li>"), a.push('<input type="hidden" name="item_number_' + g + '" value="' + f.pid + '" />'), a.push(f.name.escapeHTML()), a.push('<input type="hidden" name="item_name_' + g + '" value="' + f.name.escapeHTML() + '" />'), h = Math.abs(parseInt(c[f.pid])), a.push('<input type="number" name="quantity_' + g + '" min="0" max="99" maxlength="2" class="qty" value="' + h + '" onblur="ui.cart.update(' + f.pid + ',this.value)" />'), i = Math.abs(parseFloat(f.price)), a.push('<input type="hidden" name="amount_' + g + '" value="' + parseFloat(f.price) + '" />'), a.push("<span>$" + i + "</span>"), b += h * i, a.push("</li>"));
+		for (var a = [], b = 0, e = 0, g = 1, h, i, f; f = d[e]; e++, g++) c[f.pid] && (a.push("<li>"), a.push('<input type="hidden" name="item_number_' + g + '" value="' + f.pid + '" />'), a.push('<span class="item_name">' + f.name.escapeHTML() + '</span>'), a.push('<input type="hidden" name="item_name_' + g + '" value="' + f.name.escapeHTML() + '" />'), h = Math.abs(parseInt(c[f.pid])), a.push('<input type="number" name="quantity_' + g + '" min="0" max="99" maxlength="2" class="qty" value="' + h + '" onblur="ui.cart.update(' + f.pid + ',this.value)" />'), i = Math.abs(parseFloat(f.price)), a.push('<input type="hidden" name="amount_' + g + '" value="' + parseFloat(f.price) + '" />'), a.push('<span class="item_price">$' + i + '</span>'),  a.push('<span class="item_delete" onclick="ui.cart.remove(' + f.pid + ')">Delete</span>'), b += h * i, a.push("</li>"));
 		document.getElementById("cartTotal").innerHTML = b;
 		document.getElementById("cart").innerHTML = 1 < a.length ? a.join("") : "No item!";
-		window.mobileUI && window.mobileUI.setCartTotal(b)
 	}
 	var e = window.myLib = window.myLib || {};
 	e.post2 = function(b, a) {
@@ -24,6 +23,11 @@
 	b.add = function(pid) {
 		b.update(pid, (c[pid] || 0) + 1)
 	};
+	b.remove = function(pid) {
+		delete c[pid];
+		window.localStorage.setItem("cart_storage", JSON.stringify(c));
+		b.display()
+	}
 	b.setVisibility = function(b) {
 		var a = document.querySelector(".cartList").classList;
 		b ? a.add("display") : a.remove("display")
@@ -33,13 +37,19 @@
 	};
 	b.update = function(pid, qty) {
 		var e = !1,
-		qty = parseInt(qty);
-		0 == qty ? delete c[pid] : 0 > qty || (e = c[pid] ? !1 : !0, c[pid] = qty);
+		qty = parseInt(qty);	
+		if(isNaN(qty)){
+			alert("Please input an integer!");
+			document.querySelector(".qty").value = c[pid]
+		}
+		else{
+		0 == qty ? delete c[pid] : 0 > qty || (e = (c[pid] ? !1 : !0), c[pid] = qty);
 		window.localStorage.setItem("cart_storage", JSON.stringify(c));
-		b.display(e)
+		b.display(e)		
+		}
 	};
 	b.display = function(d) {
-		d || !b.prodDetails ? c && e.post2({
+		(d || !b.prodDetails) ? c && e.post2({
 			action: "fetchProducts",
 			list: JSON.stringify(c)
 		},

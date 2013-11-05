@@ -1,3 +1,33 @@
+<?php
+session_start();
+include_once('lib/db.inc.php');
+
+function auth() {
+	if (!empty($_SESSION['auth']))
+		return $_SESSION['auth']['em'];
+	
+	if (!empty($_COOKIE['auth'])) {
+		if ($t = json_decode($_COOKIE['auth'], true)) {
+			if (time() > $t['exp']) return false;
+			
+			global $db;
+			$db = ierg4210_DB();
+			$q = $db->prepare('SELECT salt, password FROM users WHERE email = (:email)');
+			if (($q->execute(array(':email'=>$t['em']))) && ($r = $q->fetch()) && ($t['k'] == hash_hmac('sha1', $t['exp'] . $r['password'], $r['salt']))) {
+				$_SESSION['auth'] = $_COOKIE['auth'];
+				return $t['em'];
+			}
+			header('Location: login.html');
+			exit ();
+		}
+	}
+	else {
+		header('Location: login.html');
+		exit ();
+	}
+}
+auth();
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +37,11 @@
 </head>
 
 <body>
+<header>
 <h1>IERG4210 Shop - Admin Panel</h1>
+<div><input type="button" id="log_out" value="Log Out" />
+</header>
+
 <article id="main">
 
 <section id="categoryPanel">

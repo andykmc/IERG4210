@@ -3,6 +3,7 @@ error_reporting(-1);
 // Same as error_reporting(E_ALL);
 ini_set('error_reporting', E_ALL);
 
+session_start();
 include_once('lib/db.inc.php');
 
 function ierg4210_cat_fetchall() {
@@ -106,17 +107,17 @@ function ierg4210_prod_insert() {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
 		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
-		$image_name = $lastId.$extension;
-		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
-			$image_dir = 'incl/img/'.$image_name;
+		$image_name = $lastId.$extension;			
+		if (move_uploaded_file($_FILES["file"]["tmp_name"],"/var/www/html/incl/img/" . $image_name)){
+			$image_dir = 'incl/img/'.$image_name;			
 			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir) WHERE pid=(:lastId)");
 			if(! $q->execute(array(':imagedir'=>$image_dir, ':lastId'=>$lastId))){
 				throw new PDOException("error-product-insert");
 			} 
-			// redirect back to original page; you may comment it during debug
+			// redirect back to original page; you may comment it during debug			
 			header('Location: ../admin.html');
 			exit();
-		}
+		}	
 	}
 
 	// Only an invalid file will result in the execution below
@@ -231,19 +232,32 @@ function ierg4210_prod_edit() {
 	}
 }
 	
+function auth() {
+	if (!empty($_SESSION['auth']))
+		return $_SESSION['auth']['em'];
 	
+	if (!empty($_COOKIE['auth'])) {
+		if ($t = json_decode($_COOKIE['auth'], true)) {
+			if (time() > $t['exp']) return false;
+			
+			global $db;
+			$db = ierg4210_DB();
+			$q = $db->prepare('SELECT salt, password FROM users WHERE email = (:email)');
+			if (($q->execute(array(':email'=>$t['em']))) && ($r = $q->fetch()) && ($t['k'] == hash_hmac('sha1', $t['exp'] . $r['password'], $r['salt']))) {
+				$_SESSION['auth'] = $_COOKIE['auth'];
+				return $t['em'];
+			}
+			return false;
+		}
+	}
+	return false;
+}
 	
-	
-
-
-
-
-
-
-
-
-
-
+if(($validate = auth()) === false) {
+		header('Location: ../login.html');
+		exit ();
+}
+else {
 
 
 
@@ -272,5 +286,6 @@ try {
 	echo json_encode(array('failed'=>'error-db'));
 } catch(Exception $e) {
 	echo 'while(1);' . json_encode(array('failed' => $e->getMessage()));
+}
 }
 ?>

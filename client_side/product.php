@@ -27,7 +27,9 @@
 					$cat_array;
 					if ($q->execute(array(':catid'=>$catid)))
 						$cat_array = $q->fetchAll();
-						
+					
+					$db = null;	
+					
 					$cat = $cat_array[0];
 					echo '<li>';
 					echo '<a href="index.php">Home</a>';
@@ -50,7 +52,7 @@
 					$product_array;
 					if ($q->execute(array(':catid'=>$catid)))
 						$product_array = $q->fetchAll();
-					
+					$db = null;
 					/* Underconstruction */
 					foreach ($product_array as $product){
 						echo '<li>';

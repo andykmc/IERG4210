@@ -3,7 +3,7 @@
 	function updateUI() {
 		myLib.get({action:'cat_fetchall'}, function(json){
 			// loop over the server response json
-			//   the expected format (as shown in Firebug): 
+			//   the expected format (as shown in Firebug):
 			for (var options = [], listItems = [],
 					i = 0, cat; cat = json[i]; i++) {
 				options.push('<option value="' , parseInt(cat.catid) , '">' , cat.name.escapeHTML() , '</option>');
@@ -130,5 +130,19 @@
 		el('productPanel').show();
 	}
 	
+	el('log_out').onclick = function() {
+		myLib.ajax({
+		url: 'cgi-bin/auth-process.php?action=logout',
+		success: function(json) {
+			json = JSON.parse(json);
+			if (json.success) {
+				self.location.href = 'login.html';
+			}
+			else
+				alert('Error: ' + json.failed);
+		}	
+		});
+	}
+		
 	
 })();

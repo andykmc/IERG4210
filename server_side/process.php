@@ -28,6 +28,7 @@ function ierg4210_fetchProducts(){
 				array_push($results_array, $q->fetch());
 		}
 	}
+	$db = null;
 	return $results_array;
 }
 

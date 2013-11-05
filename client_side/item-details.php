@@ -27,6 +27,7 @@
 				$q = $db->prepare("SELECT catid,name FROM products WHERE pid = (:pid);");
 				if ($q->execute(array(':pid'=>$pid)))
 					$result = $q->fetchAll();
+					
 				$catid = $result[0]["catid"];
 				$item_name = $result[0]["name"];
 				
@@ -35,6 +36,7 @@
 					$result = $q->fetchAll();
 				$catname = $result[0]["name"];
 				
+				$db = null;
 				echo '<li>';
 				echo '<a href="product.php?catid=' . $catid . '">>' . $catname . '</a>';
 				echo '<li class="active">';
@@ -56,7 +58,8 @@
 				$product_array;
 				if ($q->execute(array(':pid'=>$pid)))
 					$product_array = $q->fetchAll();
-					
+				
+				$db = null;
 				$product = $product_array[0];
 				echo '<div class="item_photo">';
 				echo	'<img src="'. $product["imagedir"] .'" alt="'. $product["name"] .'" />';

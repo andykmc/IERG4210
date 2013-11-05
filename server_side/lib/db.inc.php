@@ -4,7 +4,7 @@ function ierg4210_DB() {
 	// TODO: change the following path if needed
 	// Warning: NEVER put your db in a publicly accessible location
 	//$db = new PDO('sqlite:/var/www/db/shop.db');
-	$db = new PDO("mysql:host=localhost;dbname=ierg4210;","root","4210gp6");
+	$db = new PDO("mysql:host=localhost;dbname=ierg4210;","4210","ierg4210");
 	
 	// enable foreign key support
 	$db->query('PRAGMA foreign_keys = ON;');
