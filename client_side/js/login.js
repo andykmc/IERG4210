@@ -1,9 +1,14 @@
 (function(){
 	
+	if (self == top)
+		document.body.style.display = "block";
+	else
+		top.location = self.location;
+	
 	el('login_form').onsubmit = function() {
 		return myLib.submit(this, function(json){
 			if(json == true){
-					self.location.href = 'admin.php';
+					top.location.href = 'admin.php';
 				}
 				else
 					alert("Error: " + json);
@@ -11,7 +16,7 @@
 	}
 	
 	el('login_panel_signup').onclick = function() {
-		self.location.href = 'register.html';
+		top.location.href = 'register.php';
 	}
 
 })();

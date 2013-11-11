@@ -111,7 +111,7 @@ window.el = function(A) {
 	// To get some content in JSON format with AJAX
 	myLib.processJSON = function(url, param, successCallback, opt) {
 		opt = opt || {};
-		opt.url = url || 'cgi-bin/admin-process.php';
+		opt.url = url || 'php/admin-process.php';
 		opt.method = opt.method || 'GET';
 		if (param)
 			opt.data = encodeParam(param);
@@ -128,21 +128,21 @@ window.el = function(A) {
 	myLib.get = function(param, successCallback) {
 		param = param || {};
 		param.rnd =  new Date().getTime(); // to avoid caching in IE
-		myLib.processJSON('cgi-bin/admin-process.php?' + encodeParam(param), null, successCallback);
+		myLib.processJSON('../php/admin-process.php?' + encodeParam(param), null, successCallback);
 	};
 	// To send an action to the admin-process.php over AJAX
 	myLib.post = function(param, successCallback) {
-		myLib.processJSON('cgi-bin/admin-process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
+		myLib.processJSON('../php/admin-process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
 	};
 	// To get some content in JSON format with AJAX from the default process.php?rnd=<currentTime>
 	myLib.get2 = function(param, successCallback) {
 		param = param || {};
 		param.rnd =  new Date().getTime(); // to avoid caching in IE
-		myLib.processJSON('cgi-bin/process.php?' + encodeParam(param), null, successCallback);
+		myLib.processJSON('php/process.php?' + encodeParam(param), null, successCallback);
 	};
 	// To send an action to the process.php over AJAX
 	myLib.post2 = function(param, successCallback) {
-		myLib.processJSON('cgi-bin/process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
+		myLib.processJSON('php/process.php?rnd=' + new Date().getTime(), param, successCallback, {method:'POST'});
 	};
 
 
@@ -178,7 +178,7 @@ window.el = function(A) {
 	myLib.submit = function(form, successCallback) {
 		myLib.validate(form) && myLib.ajax({
 			method: 'POST',
-			url: form.getAttribute('action') || 'cgi-bin/admin-process.php',
+			url: form.getAttribute('action') || 'php/admin-process.php',
 			data: new formData(form).toString(),
 			success: function(json){
 				json = JSON.parse(json);

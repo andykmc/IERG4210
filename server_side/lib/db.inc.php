@@ -8,7 +8,7 @@ function ierg4210_DB() {
 	
 	// enable foreign key support
 	$db->query('PRAGMA foreign_keys = ON;');
-
+	
 	// FETCH_ASSOC: 
 	// Specifies that the fetch method shall return each row as an
 	// array indexed by column name as returned in the corresponding
@@ -18,7 +18,33 @@ function ierg4210_DB() {
 	$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 	//makes sure the statement and the values aren't parsed by PHP before sending it to the MySQL server (giving a possible attacker no chance to inject malicious SQL)
 	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
 	return $db;
+}
+
+function ierg4210_DBU() {
+	$db = new PDO("mysql:host=localhost;dbname=ierg4210_users;","4210","ierg4210");
+	
+	$db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+	$db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
+	return $db;
+}
+
+function generate_salt() {
+	$str = '';
+	$length = 12;
+	$l = 0;
+	while ($l < $length)
+	{
+		$l = strlen($str);
+		$str .= hash('sha1', uniqid('',true));
+	}
+	$str = base64_encode($str);
+	$str =strlen($str) > $length ? substr($str, 0, $length) : $str;
+	return trim(strtr($str, '/+=', '   '));
 }
 
 $image_wholedir_prefix = '/var/www/html/incl/img/';

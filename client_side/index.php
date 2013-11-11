@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Food ON-line</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link href="css/style.css" rel="stylesheet" type="text/css" />
-</head>
-	
-<body>  
-
-<?php include_once('header.php'); ?>
+<?php readfile('header.html'); ?>
 
 <article>
-			<ul class="sitemap"><!--Current Location Indicator-->
+			<ul id="sitemap"><!--Current Location Indicator-->
 				<li class="active"><a href="index.php">Home</a></li>
 			</ul>
 			<!--Slide Show-->
@@ -48,11 +38,6 @@
 				</div>
 			</section>
 </article>
-	<?php readfile('footer.html'); ?>
+
+<?php readfile('footer.html'); ?>
 	
-<script src="js/jquery-1.7.2.min.js" type="text/javascript"></script>
-<script src="js/slideshow.js" type="text/javascript"></script>
-<script type="text/javascript" src="incl/myLib.js"></script>
-<script type="text/javascript" src="incl/ui.js"></script>
-</body>
-</html>	

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Food ON-line</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+</head>
+	
+<body>  
+<header>                      
+		<div class="top_bar"><!--Top Links-->
+			<ul class="top_links">
+				<li>FREE SHIPPING ABOVE HK$150</li>
+				<li>15 DAY RETURN</li>
+				<li id="login"><a href="login.php">Log In</a></li>
+			</ul>
+		</div>
+		<!--Main Logo/Name of the Web-->
+		<h1 class="logo"><a href="index.php">Food On-line</a></h1>
+	
+		<nav><!--Navigation Bar-->
+			<ul id="navbar">		
+			</ul>
+			<!--ShoppingCart Start-->
+			<div class="cart-toggle">
+				<div class="cart_down">
+					<span class="small_arrow"></span>					
+						<ul id="cart">
+						</ul>
+						<div class="cart_bottom">	
+							<div class="cart_total"><span>TOTAL: $</span><span id="cartTotal">0</span></div>
+							<div class="button">
+								<button class="checkout" class="checkout">checkout</button>							
+								<button class="reset" onclick="ui.cart.reset()">reset</button>						
+							</div>	
+						</div>					
+				</div>
+			</div>
+			<!--ShoppingCart End-->
+		</nav>
+</header>

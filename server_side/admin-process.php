@@ -16,31 +16,44 @@ function ierg4210_cat_fetchall() {
 }
 
 function ierg4210_cat_insert() {
+	
+	$check = nonce_check();
+	if(!$check) {
+		throw new Exception("You may now visit a fake site, Try log out and log in again");
+	}
+	else {
 	// input validation or sanitization
 	if (!preg_match('/^[\w\-, ]+$/', $_POST['name']))
 		throw new Exception("invalid-name");
 	$name = $_POST['name'];
 	
 	// DB manipulation
-	global $db;
 	$db = ierg4210_DB();
-	$q = $db->prepare("INSERT INTO categories (name) VALUES (:name)");//catid not needed, since auto_increment
-	return $q->execute(array(':name'=>$name));
+	if ($q = $db->prepare("INSERT INTO categories (name) VALUES (:name)")) {
+		return $q->execute(array(':name'=>$name));
+	}
+	}
 }
 
 function ierg4210_cat_edit() {
-	// TODO: complete the rest of this function; it's now always says "successful" without doing anything
+	$check = nonce_check();
+	if (!$check){
+		throw new Exception("You may now visit a fake site, Try log out and log in again");
+	}
+	else {
 	if (!preg_match('/^[\w\-, ]+$/', $_POST['name']))
 		throw new Exception("invalid-name");
 	$name = $_POST['name'];
 	if (!is_numeric($_POST['catid']))
 		throw new Exception("invalid-catid");
 	$catid = $_POST['catid'];
-	global $db;
+	
 	$db = ierg4210_DB();
 	$q = $db->prepare("UPDATE categories SET name=(:name) WHERE catid=(:catid)");
-	$q->execute(array(':name'=>$name, ':catid'=>$catid));
-	return true;
+	if ($q->execute(array(':name'=>$name, ':catid'=>$catid))) {
+		return true;
+	}
+	}
 }
 
 function ierg4210_cat_delete() {
@@ -69,8 +82,16 @@ function ierg4210_cat_delete() {
 }
 
 // Since this form will take file upload, we use the tranditional (simpler) rather than AJAX form submission.
-// Therefore, after handling the request (DB insert and file copy), this function then redirects back to admin.html
+// Therefore, after handling the request (DB insert and file copy), this function then redirects back to admin.php
 function ierg4210_prod_insert() {
+
+	$check = nonce_check();
+	if(!$check){
+		header('Content-Type: text/html; charset=utf-8');
+		echo 'You may now visit a fake site, Try log in again.<br /><a href="../login.php">Back to login page.</a>';
+		exit();
+	}
+	else {
 	// input validation or sanitization
 	if (!is_numeric($_POST['catid']))
 		throw new Exception("invalid-catid");
@@ -90,23 +111,22 @@ function ierg4210_prod_insert() {
 	$db = ierg4210_DB();
 	// TODO: complete the rest of the INSERT command
 	$q = $db->prepare("INSERT INTO products (catid, name, price, description) VALUES (:catid, :name, :price, :description)");//pid not needed, since auto_increment
-	if(! $q->execute(array(':catid'=>$catid, ':name'=>$name, ':price'=>$price, ':description'=>$description))){
-		throw new PDOException("error-product-insert");
-	}
+	$q->execute(array(':catid'=>$catid, ':name'=>$name, ':price'=>$price, ':description'=>$description));
+	
 	
 	// The lastInsertId() function returns the pid (primary key) resulted by the last INSERT command
 	$lastId = $db->lastInsertId();
 
-	// Copy the uploaded file to a folder which can be publicly accessible at incl/img/[pid].jpg
+	// Copy the uploaded file to a folder which can be publicly accessible at incl/img/[pid].jpeg
+	$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES["file"]["tmp_name"]);
 	if ($_FILES["file"]["error"] == 0
-		&& ($_FILES["file"]["type"] == "image/jpeg" ||
-			$_FILES["file"]["type"] == "image/gif" ||
-			$_FILES["file"]["type"] == "image/jpg" ||
-			$_FILES["file"]["type"] == "image/png")
+		&& (($_FILES["file"]["type"] == "image/jpeg" && $type == "image/jpeg") ||
+			($_FILES["file"]["type"] == "image/gif" && $type == "image/gif")||
+			($_FILES["file"]["type"] == "image/png" && $type == "image/png"))
 		//&& $_FILES["file"]["size"] < 5000000) {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
-		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
+		$extension = str_replace('image/', '.', $type);
 		$image_name = $lastId.$extension;			
 		if (move_uploaded_file($_FILES["file"]["tmp_name"],"/var/www/html/incl/img/" . $image_name)){
 			$image_dir = 'incl/img/'.$image_name;			
@@ -115,7 +135,7 @@ function ierg4210_prod_insert() {
 				throw new PDOException("error-product-insert");
 			} 
 			// redirect back to original page; you may comment it during debug			
-			header('Location: ../admin.html');
+			header('Location: ../admin.php');
 			exit();
 		}	
 	}
@@ -130,13 +150,17 @@ function ierg4210_prod_insert() {
 	
 	// To replace the content-type header which was json and output an error message
 	header('Content-Type: text/html; charset=utf-8');
-	echo 'Invalid file detected. <br/><a href="javascript:history.back();">Back to admin panel.</a>';
+	echo 'Invalid file detected. <br /><a href="../admin.php">Back to admin panel.</a>';
 	exit();
+	}
 }
 
 // TODO: add other functions here to make the whole application complete
 function ierg4210_prod_fetchAllBy_catid() {
-	$catid = $_REQUEST["catid"];
+	
+	if(!is_numeric($_GET['catid']))
+		throw new Exception('Invalid catid');
+	$catid = $_GET["catid"];
 	// DB manipulation
 	global $db;
 	$db = ierg4210_DB();
@@ -155,7 +179,6 @@ function ierg4210_prod_delete() {
 	
 	$q = $db->prepare("DELETE FROM products WHERE pid=(:pid)");
 	if($q->execute(array(':pid'=>$pid))){
-		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpg'))
 		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpeg'))
 		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
 			unlink('/var/www/html/incl/img/'.$pid.'.gif');
@@ -178,6 +201,14 @@ function ierg4210_prod_fetch(){
 }
 
 function ierg4210_prod_edit() {
+	
+	$check = nonce_check();
+	if(!$check) {
+		header('Content-Type: text/html; charset=utf-8');
+		echo 'You may now visit a fake site, Try log in again.<br /><a href="../login.php">Back to login page.</a>';
+		exit();
+	}
+	else {
 	//input validation or sanitization
 	if (!is_numeric($_POST['pid']))
 		throw new Exception("invalid-pid");
@@ -196,22 +227,20 @@ function ierg4210_prod_edit() {
 	global $db;
 	$db = ierg4210_DB();
 	$q = $db->prepare("UPDATE products SET name=(:name), price=(:price), description=(:description) WHERE pid=(:pid)"); 
-	if(! $q->execute(array(':name'=>$name, ':price'=>$price, ':description'=>$description, ':pid'=>$pid)))
-		throw new Exception("error-product-edit");
-	header('Location: ../admin.html');
+	$q->execute(array(':name'=>$name, ':price'=>$price, ':description'=>$description, ':pid'=>$pid));
 	
+	if ($_FILES['file']['tmp_name']) {
 	// Delete the original image
+	$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES["file"]["tmp_name"]);
 	if ($_FILES["file"]["error"] == 0
-		&& ($_FILES["file"]["type"] == "image/jpeg" ||
-			$_FILES["file"]["type"] == "image/jpg"  ||
-			$_FILES["file"]["type"] == "image/png"  ||
-			$_FILES["file"]["type"] == "image/gif")
+		&& (($_FILES["file"]["type"] == "image/jpeg" && $type == "image/jpeg") ||			
+			($_FILES["file"]["type"] == "image/png" && $type == "image/png")  ||
+			($_FILES["file"]["type"] == "image/gif" && $type == "image/gif"))
 		//&& $_FILES["file"]["size"] < 5000000) {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
-		// Note: Take care of the permission of destination folder (hints: current user is apache)
-		if (! unlink('/var/www/html/incl/img/'.$pid.'.jpg'))
-		if (! unlink('/var/www/html/incl/img'.$pid.'.jpeg'))
-		if (! unlink('/var/www/html/incl/img/'.$pid.'.png'))
+		// Note: Take care of the permission of destination folder (hints: current user is apache)		
+		if (!(unlink('/var/www/html/incl/img/'.$pid.'.jpeg')))
+		if (!(unlink('/var/www/html/incl/img/'.$pid.'.png')))
 			unlink('/var/www/html/incl/img/'.$pid.'.gif');
 		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
 		$image_name = $pid.$extension;
@@ -223,12 +252,25 @@ function ierg4210_prod_edit() {
 			if(! $q->execute(array(':imagedir'=>$image_dir, ':pid'=>$pid))){
 				throw new PDOException("error-product-insert");
 			} 
-			header('Location: ../admin.html');
+			header('Location: ../admin.php');
 			exit();
 		}
 		else{
-			throw new Exception("Image failed to edit!");
+			header('Content-Type: text/html; charset=utf-8');
+			echo 'Product Edit failed. <br /><a href="javascript:history.back();">Back to admin panel.</a>';
+			exit();
 		}
+	}
+	else {
+		header('Content-Type: text/html; charset=utf-8');
+		echo 'Check your image type. <br /><a href="../admin.php">Back to admin panel.</a>';
+		exit();
+	}
+	}	
+	else {
+		header('Location: ../admin.php');
+		exit();
+	}
 	}
 }
 	
@@ -241,7 +283,7 @@ function auth() {
 			if (time() > $t['exp']) return false;
 			
 			global $db;
-			$db = ierg4210_DB();
+			$db = ierg4210_DBU();
 			$q = $db->prepare('SELECT salt, password FROM users WHERE email = (:email)');
 			if (($q->execute(array(':email'=>$t['em']))) && ($r = $q->fetch()) && ($t['k'] == hash_hmac('sha1', $t['exp'] . $r['password'], $r['salt']))) {
 				$_SESSION['auth'] = $_COOKIE['auth'];
@@ -252,10 +294,25 @@ function auth() {
 	}
 	return false;
 }
+
+function nonce_check() {
+	if (empty($_POST['nonce']) || empty($_SESSION['row'])) {
+		return false;
+	}
+	global $db;
+	$db = ierg4210_DBU();
+	$q = $db->prepare('SELECT nonce FROM form_nonces WHERE row=(:row)');
+	if (($q->execute(array(':row'=>$_SESSION['row']))) && ($r = $q->fetch()) && ($r['nonce'] == $_POST['nonce'])) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 	
 if(($validate = auth()) === false) {
-		header('Location: ../login.html');
-		exit ();
+		echo 'while(1);' . json_encode(array('success' => 'redirect'));
 }
 else {
 
@@ -279,8 +336,10 @@ try {
 			error_log(print_r($db->errorInfo(), true));
 		//echo json_encode(array('failed'=>'1'));
 		echo json_encode(array('failed'=>$db->errorCode()));
+		$db = null;
 	}
 	echo 'while(1);' . json_encode(array('success' => $returnVal));
+	$db = null;
 } catch(PDOException $e) {
 	error_log($e->getMessage());
 	echo json_encode(array('failed'=>'error-db'));

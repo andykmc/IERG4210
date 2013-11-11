@@ -1,3 +1,7 @@
+body{
+	display: none;
+}
+
 .logo{
 	text-align: center;
 	margin: 20px 0px;
@@ -22,6 +26,11 @@ label{
 .controls{
 	margin-bottom: 3px;
 	margin-left: 160px;
+}
+
+.reminder {
+	color: #c1c1c1;
+	font-size: 13px;
 }
 
 .form-actions{

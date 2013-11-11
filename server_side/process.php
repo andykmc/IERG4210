@@ -20,7 +20,7 @@ function ierg4210_fetchProducts(){
 		if (!is_numeric($pid))
 			throw new Exception("invalid-pid");
 	
-		$q = $db->prepare("SELECT pid, catid, name, price FROM products WHERE pid=(:pid)");
+		$q = $db->prepare("SELECT * FROM products WHERE pid=(:pid)");
 		if($q->execute(array(':pid' => $pid))){
 			if (empty($results_array))
 				$results_array = $q->fetchAll();
@@ -28,10 +28,56 @@ function ierg4210_fetchProducts(){
 				array_push($results_array, $q->fetch());
 		}
 	}
-	$db = null;
 	return $results_array;
 }
 
+function ierg4210_cat_fetchall() {
+	// DB manipulation
+	global $db;
+	$db = ierg4210_DB();
+	$q = $db->prepare("SELECT * FROM categories");
+	if ($q->execute())
+		return $q->fetchAll();
+	
+}
+
+function ierg4210_cat_fetchbyid() {
+	
+	if (!is_numeric($_GET['catid']))
+		throw new Exception('invalid-catid');
+	
+	global $db;
+	$db = ierg4210_DB();
+	$q = $db->prepare('SELECT * FROM categories WHERE catid=(:catid)');
+	$q->execute(array(':catid'=>$_GET['catid']));
+	return $q->fetchAll();
+	
+}
+
+function ierg4210_prod_fetchbyid() {
+	
+	if (!is_numeric($_GET['pid']))
+		throw new Exception('invalid-pid');
+	
+	global $db;
+	$db = ierg4210_DB();
+	$q = $db->prepare('SELECT * FROM products WHERE pid=(:pid)');
+	$q->execute(array(':pid'=>$_GET['pid']));
+	return $q->fetchAll();
+}
+
+function ierg4210_prod_fetchAllBy_catid() {
+	
+	if (!is_numeric($_GET["catid"]))
+		throw new Exception("invalid-catid");
+	$catid = $_GET["catid"];
+	
+	global $db;
+	$db = ierg4210_DB();
+	$q = $db->prepare('SELECT * FROM products WHERE catid=(:catid)');
+	$q->execute(array(':catid'=>$catid));
+	return $q->fetchAll();
+}
 
 
 
@@ -52,8 +98,10 @@ try {
 			error_log(print_r($db->errorInfo(), true));
 		//echo json_encode(array('failed'=>'1'));
 		echo json_encode(array('failed'=>$db->errorCode()));
+		$db = null;
 	}
 	echo 'while(1);' . json_encode(array('success' => $returnVal));
+	$db = null;
 } catch(PDOException $e) {
 	error_log($e->getMessage());
 	echo json_encode(array('failed'=>'error-db'));
