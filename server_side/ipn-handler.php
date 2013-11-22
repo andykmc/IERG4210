@@ -103,8 +103,8 @@ if ($paypal_reply == "VERIFIED")
 	if ($digest == $custom) {
 				
 		for ($j = 1; $j < $i; $j++) {
-			$q = $db->prepare('INSERT INTO txn (txn_id, pid, quantity, price) VALUES (:txn_id, :pid, :quantity, :price)');
-			$q->execute(array(':txn_id'=>$txn_id, ':pid'=>$item_number[$j], ':quantity'=>$quantity[$j], ':price'=>$price[$j]));
+			$q = $db->prepare('INSERT INTO txn (txn_id, pid, invoice, quantity, item_total_price) VALUES (:txn_id, :pid, :invoice, :quantity, :price)');
+			$q->execute(array(':txn_id'=>$txn_id, ':pid'=>$item_number[$j], ':invoice'=>$invoice, ':quantity'=>$quantity[$j], ':price'=>$price[$j]));
 		}
 		error_log(date(' [Y-m-d H:i e] ') . $txn_id . " Successfully Validated and Insert the transaction into database" . PHP_EOL, 3, "/var/www/html/php/ipn_log" );
 		$db = null;
