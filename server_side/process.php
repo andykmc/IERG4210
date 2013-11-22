@@ -47,18 +47,22 @@ function ierg4210_buildOrder() {
 		$q = $db->prepare("SELECT price FROM products WHERE pid=(:pid)");
 		if($q->execute(array(':pid' => $pid))){
 			$r = $q->fetch();
+			$r['price'] = (float)$r['price'];
+			$r['price'] = sprintf("%.2f", $r['price']);
 			$result_array[$pid] = $r['price'];
 		}
 		
 		$total += ($list_array[$pid] * $result_array[$pid]); 
 	}
 	
+	$total = (float)$total;
+	$total = sprintf("%.2f", $total);
 	$salt = generate_salt();
 	$email = "hz011-seller@ie.cuhk.edu.hk";
-	$currency = "USD";
+	$currency = "HKD";
 	$data = $currency . $email . $salt . $list_array . $result_array . $total;
 	$digest = hash_hmac('sha1', $data, $salt);
-		
+			
 	$db = ierg4210_DBU();
 	$q = $db->prepare("INSERT INTO orders (digest, salt, total) VALUES (:digest, :salt, :total)");
 	$q->execute(array(':digest' => $digest, ':salt' => $salt, ':total' => $total));

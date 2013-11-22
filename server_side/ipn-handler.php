@@ -62,11 +62,11 @@ if ($paypal_reply == "VERIFIED")
 	{	
 		$item_number[$i] = $_POST['item_number' . $i . ''];
 		$quantity[$i] = $_POST['quantity' . $i . ''];
-		$price[$i] = $_POST['mc_gross' . $i . ''];
+		$price[$i] = $_POST['mc_gross_' . $i . ''];
 		
 		$i += 1;
 	}	
-	$total = $_POST['mc_gross1'];
+	$total = $_POST['mc_gross'];
 	
 	global $db;
 	$db = ierg4210_DBU();
@@ -110,7 +110,7 @@ if ($paypal_reply == "VERIFIED")
 		$db = null;
 		die();
 	}
-    error_log(date(' [Y-m-d H:i e] ') . $t['salt'] . " " . $payment_currency . " " . $receiver_email . " " . print_r($result_array, true) .  " " . print_r($list_array, true) . " " . $total . PHP_EOL, 3, '/var/www/html/php/ipn_error_log');
+    error_log(date(' [Y-m-d H:i e] ') . $txn_id . " Validation Failed" . PHP_EOL, 3, '/var/www/html/php/ipn_error_log');
 	$db = null;
 	die();
 }
