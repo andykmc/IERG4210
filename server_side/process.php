@@ -31,6 +31,44 @@ function ierg4210_fetchProducts(){
 	return $results_array;
 }
 
+function ierg4210_buildOrder() {
+	$list_array = json_decode($_POST['list'], true);
+	$pid_array = array_keys($list_array);
+	$total = 0;
+	$result_array = array();
+	
+	global $db;
+	$db = ierg4210_DB();
+	
+	foreach ($pid_array as $pid){
+		if(!is_numeric($pid) || !is_numeric($list_array[$pid]) || 0 >= $list_array[$pid] )
+			throw new Exception("invalid pid or invalid quantity");
+		
+		$q = $db->prepare("SELECT price FROM products WHERE pid=(:pid)");
+		if($q->execute(array(':pid' => $pid))){
+			$r = $q->fetch();
+			$result_array[$pid] = $r['price'];
+		}
+		
+		$total += ($list_array[$pid] * $result_array[$pid]); 
+	}
+	
+	$salt = generate_salt();
+	$email = "hz011-seller@ie.cuhk.edu.hk";
+	$currency = "USD";
+	$data = $currency . $email . $salt . $list_array . $result_array . $total;
+	$digest = hash_hmac('sha1', $data, $salt);
+		
+	$db = ierg4210_DBU();
+	$q = $db->prepare("INSERT INTO orders (digest, salt, total) VALUES (:digest, :salt, :total)");
+	$q->execute(array(':digest' => $digest, ':salt' => $salt, ':total' => $total));
+	
+	$lastId = $db->lastInsertId();
+	$back_array = array(0=>array("digest"=>$digest, "invoice"=>$lastId));
+	
+	return $back_array;
+}
+
 function ierg4210_cat_fetchall() {
 	// DB manipulation
 	global $db;
@@ -78,8 +116,6 @@ function ierg4210_prod_fetchAllBy_catid() {
 	$q->execute(array(':catid'=>$catid));
 	return $q->fetchAll();
 }
-
-
 
 header('Content-Type: application/json');
 

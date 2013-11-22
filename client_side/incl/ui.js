@@ -71,14 +71,16 @@
 			list: JSON.stringify(c)
 		},
 		function(a) {
-			if (!a.digest || !a.invoice) return alert("error occurred!");
+			var p = a[0], s = [];
+			if (!p.digest && !p.invoice) return alert("error occurred");
 			c = {};
 			window.localStorage.setItem("cart_storage", JSON.stringify(c));
-			b.custom.value = a.digest;
-			b.invoice.value = a.invoice;
+			(s.push('<input type="hidden" name="custom" value="' + p.digest + '">'), 
+			s.push('<input type="hidden" name="invoice" value="' +p.invoice + '">'));
+			document.getElementById('append').innerHTML = s.join('');
 			b.submit()
 		});
-		return ! 1
+		return ! 1;
 	};
 	b.getSavedStore();
 	b.display()
