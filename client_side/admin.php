@@ -2,6 +2,17 @@
 session_start();
 include_once('../php/lib/db.inc.php');
 
+/* check the referer header to defend CSRF attack */
+$headers = apache_request_headers();
+foreach ($headers as $header=>$value) {
+	if($header == 'Referer') {
+		if($value != 'https://secure.grp6.ierg4210.ie.cuhk.edu.hk/secure/login.php') {
+			echo "Please login through our login page!";
+			exit();
+		}
+	}
+}
+
 function auth() {
 	if (!empty($_SESSION['auth']))
 		return $_SESSION['auth']['em'];
