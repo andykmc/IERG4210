@@ -2,6 +2,8 @@
 error_reporting(-1);
 // Same as error_reporting(E_ALL);
 ini_set('error_reporting', E_ALL);
+ini_set("log_errors", 1);
+ini_set("error_log", "/tmp/php-error.log");
 
 session_start();
 include_once('lib/db.inc.php');
@@ -127,17 +129,50 @@ function ierg4210_prod_insert() {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
 		$extension = str_replace('image/', '.', $type);
-		$image_name = $lastId.$extension;			
-		if (move_uploaded_file($_FILES["file"]["tmp_name"],"/var/www/html/incl/img/" . $image_name)){
-			$image_dir = 'incl/img/'.$image_name;			
-			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir) WHERE pid=(:lastId)");
-			if(! $q->execute(array(':imagedir'=>$image_dir, ':lastId'=>$lastId))){
+		$image_name = $lastId.$extension;
+		$image_dir = '/var/www/html/incl/img/';
+		$thumb_name = $lastId.'_thumb'.$extension;
+		$thumb_dir = '/var/www/html/incl/img/thumb/';
+		if (move_uploaded_file($_FILES["file"]["tmp_name"],$image_dir . $image_name)){
+			//make thumbnail
+			list($original_width, $original_height, $mime) = getimagesize($image_dir. $image_name);			 
+			if ($original_width >= $original_height){
+				$thumb_width = 300;
+				$thumb_height = round($original_height * $thumb_width/$original_width);
+			}else{
+				$thumb_height = 300;
+				$thumb_width = round($original_width * $thumb_height/$original_height);
+			}
+			$img_source = imagecreatefromstring(file_get_contents($image_dir. $image_name));
+			$thumb_img = imagecreatetruecolor($thumb_width, $thumb_height);
+			imagealphablending($thumb_img, false); //for preserving png transparent background
+			imagesavealpha($thumb_img, true);  //for preserving png transparent background
+			imagecopyresampled($thumb_img, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $original_width, $original_height);			
+			error_log($mime);
+			switch ($mime){
+				case IMAGETYPE_GIF:
+					imagegif($thumb_img,$thumb_dir.$thumb_name);
+					break;
+				case IMAGETYPE_JPEG:
+					imagejpeg($thumb_img,$thumb_dir.$thumb_name,100);
+					break;
+				case IMAGETYPE_PNG:
+					imagepng($thumb_img,$thumb_dir.$thumb_name);
+					break;				
+			}
+			imagedestroy($img_source);
+			imagedestroy($thumb_img); 
+			$image_dir = 'incl/img/'.$image_name;
+			$thumb_dir = 'incl/img/thumb/'.$thumb_name;
+			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir),thumbdir=(:thumbdir) WHERE pid=(:lastId)");
+			if(! $q->execute(array(':imagedir'=>$image_dir, ':thumbdir'=>$thumb_dir, ':lastId'=>$lastId))){
 				throw new PDOException("error-product-insert");
 			} 
 			// redirect back to original page; you may comment it during debug			
-			header('Location: ../admin.php');
-			exit();
-		}	
+			//header('Location: ../admin.php');
+			return $catid;
+			//exit();
+		}
 	}
 
 	// Only an invalid file will result in the execution below
@@ -148,10 +183,11 @@ function ierg4210_prod_insert() {
 		throw new PDOException("error-remove-invalid-insert");
 	}
 	
+	throw new Exception("Invalid file");
 	// To replace the content-type header which was json and output an error message
-	header('Content-Type: text/html; charset=utf-8');
+	/* header('Content-Type: text/html; charset=utf-8');
 	echo 'Invalid file detected. <br /><a href="../admin.php">Back to admin panel.</a>';
-	exit();
+	exit(); */
 	}
 }
 
@@ -230,43 +266,78 @@ function ierg4210_prod_edit() {
 	$q->execute(array(':name'=>$name, ':price'=>$price, ':description'=>$description, ':pid'=>$pid));
 	
 	if ($_FILES['file']['tmp_name']) {
-	// Delete the original image
-	$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES["file"]["tmp_name"]);
-	if ($_FILES["file"]["error"] == 0
-		&& (($_FILES["file"]["type"] == "image/jpeg" && $type == "image/jpeg") ||			
-			($_FILES["file"]["type"] == "image/png" && $type == "image/png")  ||
-			($_FILES["file"]["type"] == "image/gif" && $type == "image/gif"))
-		//&& $_FILES["file"]["size"] < 5000000) {
-		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
-		// Note: Take care of the permission of destination folder (hints: current user is apache)		
-		if (!(unlink('/var/www/html/incl/img/'.$pid.'.jpeg')))
-		if (!(unlink('/var/www/html/incl/img/'.$pid.'.png')))
-			unlink('/var/www/html/incl/img/'.$pid.'.gif');
-		$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
-		$image_name = $pid.$extension;
-		if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $image_name)) {
-		//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
-			// redirect back to original page; you may comment it during debug
-			$image_dir = 'incl/img/'.$image_name;
-			$q = $db->prepare("UPDATE products SET imagedir=(:imagedir) WHERE pid=(:pid)");
-			if(! $q->execute(array(':imagedir'=>$image_dir, ':pid'=>$pid))){
-				throw new PDOException("error-product-insert");
-			} 
-			header('Location: ../admin.php');
-			exit();
+		// Delete the original image
+		$type = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES["file"]["tmp_name"]);
+		if ($_FILES["file"]["error"] == 0
+			&& (($_FILES["file"]["type"] == "image/jpeg" && $type == "image/jpeg") ||			
+				($_FILES["file"]["type"] == "image/png" && $type == "image/png")  ||
+				($_FILES["file"]["type"] == "image/gif" && $type == "image/gif"))
+			//&& $_FILES["file"]["size"] < 5000000) {
+			&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
+			// Note: Take care of the permission of destination folder (hints: current user is apache)		
+			if (!(unlink('/var/www/html/incl/img/'.$pid.'.jpeg')))
+			if (!(unlink('/var/www/html/incl/img/'.$pid.'.png')))
+				unlink('/var/www/html/incl/img/'.$pid.'.gif');
+			if (!(unlink('/var/www/html/incl/img/thumb/'.$pid.'_thumb.jpeg')))
+			if (!(unlink('/var/www/html/incl/img/thumb/'.$pid.'_thumb.png')))
+				unlink('/var/www/html/incl/img/thumb/'.$pid.'_thumb.gif');
+			$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
+			$image_name = $pid.$extension;
+			$image_dir = '/var/www/html/incl/img/';
+			$thumb_name = $pid.'_thumb'.$extension;
+			$thumb_dir = '/var/www/html/incl/img/thumb/';
+			if (move_uploaded_file($_FILES["file"]["tmp_name"], $image_dir . $image_name)) {
+			//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
+				// redirect back to original page; you may comment it during debug
+				//make thumbnail
+				list($original_width, $original_height, $mime) = getimagesize($image_dir. $image_name);			 
+				if ($original_width >= $original_height){
+					$thumb_width = 300;
+					$thumb_height = round($original_height * $thumb_width/$original_width);
+				}else{
+					$thumb_height = 300;
+					$thumb_width = round($original_width * $thumb_height/$original_height);
+				}
+				$img_source = imagecreatefromstring(file_get_contents($image_dir. $image_name));
+				$thumb_img = imagecreatetruecolor($thumb_width, $thumb_height);
+				imagealphablending($thumb_img, false); //for preserving png transparent background
+				imagesavealpha($thumb_img, true);  //for preserving png transparent background
+				imagecopyresampled($thumb_img, $img_source, 0, 0, 0, 0, $thumb_width, $thumb_height, $original_width, $original_height);			
+				error_log($mime);
+				switch ($mime){
+					case IMAGETYPE_GIF:
+						imagegif($thumb_img,$thumb_dir.$thumb_name);
+						break;
+					case IMAGETYPE_JPEG:
+						imagejpeg($thumb_img,$thumb_dir.$thumb_name,100);
+						break;
+					case IMAGETYPE_PNG:
+						imagepng($thumb_img,$thumb_dir.$thumb_name);
+						break;				
+				}
+				imagedestroy($img_source);
+				imagedestroy($thumb_img); 
+				$image_dir = 'incl/img/'.$image_name;
+				$thumb_dir = 'incl/img/thumb/'.$thumb_name;
+				$q = $db->prepare("UPDATE products SET imagedir=(:imagedir),thumbdir=(:thumbdir) WHERE pid=(:pid)");
+				if(! $q->execute(array(':imagedir'=>$image_dir, ':thumbdir'=>$thumb_dir, ':pid'=>$pid))){
+					throw new PDOException("error-product-insert");
+				} 
+				header('Location: ../admin.php');
+				exit();
+			}
+			else{
+				header('Content-Type: text/html; charset=utf-8');
+				echo 'Product Edit failed. <br /><a href="javascript:history.back();">Back to admin panel.</a>';
+				exit();
+			}
 		}
-		else{
+		else {
 			header('Content-Type: text/html; charset=utf-8');
-			echo 'Product Edit failed. <br /><a href="javascript:history.back();">Back to admin panel.</a>';
+			echo 'Check your image type. <br /><a href="../admin.php">Back to admin panel.</a>';
 			exit();
 		}
 	}
-	else {
-		header('Content-Type: text/html; charset=utf-8');
-		echo 'Check your image type. <br /><a href="../admin.php">Back to admin panel.</a>';
-		exit();
-	}
-	}	
 	else {
 		header('Location: ../admin.php');
 		exit();

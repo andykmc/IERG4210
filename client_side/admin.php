@@ -129,7 +129,7 @@ auth();
 			<div><textarea id="prod_insert_description" name="description" pattern="^[\w\-, ]*$" placeholder="Write some description here..."></textarea></div>
 
 			Image *
-			<div><input type="file" name="file" required="true" accept="image/jpeg" /></div>
+			<div><input type="file" name="file" required="true" accept="image/jpeg,image/png,image/gif" /></div>
 
 			<input type="submit" value="Submit" />
 		</form>
@@ -158,7 +158,7 @@ auth();
 				<div><textarea id="prod_edit_description" name="description" pattern="^[\w\-, ]*$" placeholder="Write some description here..."></textarea></div>
 
 				Image
-				<div><input type="file" name="file" accept="image/jpeg" />
+				<div><input type="file" name="file" accept="image/jpeg,image/png,image/gif" />
 				<img id="prod_edit_img" />
 				</div>
 				<input type="hidden" id="prod_edit_pid" name="pid" />
@@ -175,7 +175,9 @@ auth();
 
 <div class="clear"></div>
 </article>
+
 <script type="text/javascript" src="../incl/myLib.js"></script>
 <script type="text/javascript" src="../js/admin.js"></script>
+
 </body>
 </html>

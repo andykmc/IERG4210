@@ -162,6 +162,20 @@
 		});
 	}
 	
+	//AJAX cannot transfer file directly, need to convert to string
+	/* el('prod_insert').onsubmit = function(){
+		
+		return myLib.submit(this, function(json){
+			if (json == 'redirect'){
+				alert('You need to login again');
+				top.location.href = 'login.php';
+			}
+			else {
+				updateprodUI(json);
+			}
+		});
+	} */
+	
 	el('cat_edit_cancel').onclick = function() {
 		// toggle the edit/view display
 		el('categoryEditPanel').hide();
@@ -186,6 +200,5 @@
 		}	
 		});
 	}
-		
 	
 })();

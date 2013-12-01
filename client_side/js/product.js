@@ -5,7 +5,7 @@
 			var prod_catid = el('prod_catid').value;
 			myLib.get2({action:'prod_fetchAllBy_catid', catid:prod_catid}, function(json){
 				for (var a = [], i = 0, prod; prod = json[i]; i++){
-					(a.push('<li>'), a.push('<a class="product_img" href="item-details.php?pid=' + prod.pid + '">'), a.push('<img src="' + prod.imagedir +'" alt="' + prod.name +'" />'), a.push('</a>'),
+					(a.push('<li>'), a.push('<a class="product_img" href="item-details.php?pid=' + prod.pid + '">'), a.push('<img src="' + prod.thumbdir +'" alt="' + prod.name +'" />'), a.push('</a>'),
 					a.push('<div class="product_info">'), a.push('<span><a href="item-details.php?pid=' + prod.pid + '">' + prod.name +'</a></span>'), a.push('<div class="price_info">'), a.push('<span>' + prod.price + '</span>'),
 					a.push('</div>'), a.push('</div>'), a.push('<div class="add_to_buttons">'), a.push('<button class="add_cart" onclick="ui.cart.add(' + prod.pid + ')">Add to Cart'), a.push('</button>'),
 					a.push('</div>'), a.push('</li>'));
