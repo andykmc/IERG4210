@@ -129,9 +129,11 @@ function ierg4210_prod_insert() {
 		&& $_FILES["file"]["size"] <= 1310720) {//1310720 bytes = 10MB
 		// Note: Take care of the permission of destination folder (hints: current user is apache)
 		$extension = str_replace('image/', '.', $type);
-		$image_name = $lastId.$extension;
+		$datetime = new DateTime();
+		$name_stamp = $datetime->getTimestamp();
+		$image_name = $lastId.'_'.$name_stamp.$extension;
 		$image_dir = '/var/www/html/incl/img/';
-		$thumb_name = $lastId.'_thumb'.$extension;
+		$thumb_name = $lastId.'_'.$name_stamp.'_thumb'.$extension;
 		$thumb_dir = '/var/www/html/incl/img/thumb/';
 		if (move_uploaded_file($_FILES["file"]["tmp_name"],$image_dir . $image_name)){
 			//make thumbnail
@@ -282,9 +284,11 @@ function ierg4210_prod_edit() {
 			if (!(unlink('/var/www/html/incl/img/thumb/'.$pid.'_thumb.png')))
 				unlink('/var/www/html/incl/img/thumb/'.$pid.'_thumb.gif');
 			$extension = str_replace('image/', '.', $_FILES["file"]["type"]);
-			$image_name = $pid.$extension;
+			$datetime = new DateTime();
+			$name_stamp = $datetime->getTimestamp();
+			$image_name = $pid.'_'.$name_stamp.$extension;
 			$image_dir = '/var/www/html/incl/img/';
-			$thumb_name = $pid.'_thumb'.$extension;
+			$thumb_name = $pid.'_'.$name_stamp.'_thumb'.$extension;
 			$thumb_dir = '/var/www/html/incl/img/thumb/';
 			if (move_uploaded_file($_FILES["file"]["tmp_name"], $image_dir . $image_name)) {
 			//if (move_uploaded_file($_FILES["file"]["tmp_name"], "/var/www/html/incl/img/" . $_FILES["file"]["name"])) {
@@ -323,24 +327,28 @@ function ierg4210_prod_edit() {
 				if(! $q->execute(array(':imagedir'=>$image_dir, ':thumbdir'=>$thumb_dir, ':pid'=>$pid))){
 					throw new PDOException("error-product-insert");
 				} 
-				header('Location: ../admin.php');
-				exit();
+				return $pid;
+				/* header('Location: ../admin.php');
+				exit(); */
 			}
 			else{
-				header('Content-Type: text/html; charset=utf-8');
-				echo 'Product Edit failed. <br /><a href="javascript:history.back();">Back to admin panel.</a>';
-				exit();
+				return 'Product Edit failed';
+				/*header('Content-Type: text/html; charset=utf-8');
+				 echo 'Product Edit failed. <br /><a href="javascript:history.back();">Back to admin panel.</a>';
+				exit();*/
 			}
 		}
 		else {
-			header('Content-Type: text/html; charset=utf-8');
+			return 'Invalid image type';
+			/* header('Content-Type: text/html; charset=utf-8');
 			echo 'Check your image type. <br /><a href="../admin.php">Back to admin panel.</a>';
-			exit();
+			exit(); */
 		}
 	}
 	else {
-		header('Location: ../admin.php');
-		exit();
+		return $pid;
+		/* header('Location: ../admin.php');
+		exit(); */
 	}
 	}
 }

@@ -22,7 +22,6 @@ window.el = function(A) {
 	return A;
 };
 
-
 (function(){
 	
 	var myLib = window.myLib = (window.myLib || {});
@@ -190,5 +189,44 @@ window.el = function(A) {
 		});
 		return false;
 	};
+	
+	//this function can be used any Form with any enctype
+	myLib.newAJAXSubmit = function (oFormElement, successCallback) {
+		if (!oFormElement.action) { return; }
+		var oReq = new XMLHttpRequest();
+		oReq.onreadystatechange = function(){
+			if (oReq.readyState == 4) {
+				var status = oReq.status, response = oReq.responseText;
+				if ((status >= 200 && status < 300) || status == 304 || status == 1223) {
+					if (successCallback){
+						var responseJson = JSON.parse((response.substr(0,9) == 'while(1);') ? response.substring(9) : response);
+						if (responseJson.success)
+							successCallback.call(this, responseJson.success);
+						else 
+							alert('Error: ' + responseJson.failed);
+					}
+				}else if (status >= 500)
+					error.call(oReq);
+			}
+		};
+		if (oFormElement.method.toLowerCase() === "post") {
+			oReq.open("post", oFormElement.action, true);
+			oReq.send(new FormData(oFormElement));
+		} else {
+			var oField, sFieldType, nFile, sSearch = "";
+			for (var nItem = 0; nItem < oFormElement.elements.length; nItem++) {
+				oField = oFormElement.elements[nItem];
+				if (!oField.hasAttribute("name")) { continue; }
+					sFieldType = oField.nodeName.toUpperCase() === "INPUT" ? oField.getAttribute("type").toUpperCase() : "TEXT";
+				if (sFieldType === "FILE") {
+					for (nFile = 0; nFile < oField.files.length; sSearch += "&" + escape(oField.name) + "=" + escape(oField.files[nFile++].name));
+				} else if ((sFieldType !== "RADIO" && sFieldType !== "CHECKBOX") || oField.checked) {
+					sSearch += "&" + escape(oField.name) + "=" + escape(oField.value);
+			  }	
+			}
+			oReq.open("get", oFormElement.action.replace(/(?:\?.*)?$/, sSearch.replace(/^&/, "?")), true);
+			oReq.send(null);
+		}
+	}
 
 })();

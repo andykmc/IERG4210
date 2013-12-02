@@ -161,20 +161,48 @@
 			}
 		});
 	}
-	
-	//AJAX cannot transfer file directly, need to convert to string
-	/* el('prod_insert').onsubmit = function(){
 		
-		return myLib.submit(this, function(json){
-			if (json == 'redirect'){
+	el('prod_insert').onsubmit = function(){
+		myLib.newAJAXSubmit(this, function(response){
+			if (response == 'redirect'){
 				alert('You need to login again');
 				top.location.href = 'login.php';
 			}
 			else {
-				updateprodUI(json);
+				updateprodUI(response);
 			}
 		});
-	} */
+		return false;
+	}
+	
+	el('prod_edit').onsubmit = function(){
+		myLib.newAJAXSubmit(this, function(response){
+			if (response == 'redirect'){
+				alert('You need to login again');
+				top.location.href = 'login.php';
+			}
+			else {
+				alert('Edit success!');
+				myLib.get({action:'prod_fetch', pid: response}, function(prod_response){
+				if (prod_response == 'redirect') {
+					alert('You need to login again');
+					top.location.href = 'login.php';
+				}else {
+					el('productPanel').hide();
+					el('productEditPanel').show();	
+					var prod = prod_response[0];
+					el("prod_edit_name").value = prod.name;
+					el("prod_edit_price").value = prod.price;
+					el("prod_edit_description").value = prod.description;
+					el("prod_edit_pid").value=prod.pid;
+					el("prod_edit_img").src="../" + prod.imagedir;
+					el("prod_edit_img").alt=prod.name;
+				}
+			});
+			}
+		});
+		return false;
+	}
 	
 	el('cat_edit_cancel').onclick = function() {
 		// toggle the edit/view display
