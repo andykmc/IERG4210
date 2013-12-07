@@ -34,7 +34,7 @@
 		</fieldset>
 </section>
 
-<script type="text/javascript" src="../incl/myLib.js"></script>
+<script type="text/javascript" src="../js/myLib.js"></script>
 <script type="text/javascript" src="../js/login.js"></script>
 </body>
 </html>

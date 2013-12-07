@@ -39,7 +39,7 @@
 		</fieldset>
 </section>
 
-<script type="text/javascript" src="../incl/myLib.js"></script>
+<script type="text/javascript" src="../js/myLib.js"></script>
 <script type="text/javascript" src="../js/signup.js"></script>
 </body>
 </html>

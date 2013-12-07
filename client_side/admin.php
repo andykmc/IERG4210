@@ -47,7 +47,7 @@ auth();
 <head>
 	<meta charset="utf-8" />
 	<title>IERG4210 Shop - Admin Panel</title>
-	<link href="../incl/admin.css" rel="stylesheet" type="text/css"/>
+	<link href="../css/admin.css" rel="stylesheet" type="text/css"/>
 </head>
 
 <body>
@@ -176,7 +176,7 @@ auth();
 <div class="clear"></div>
 </article>
 
-<script type="text/javascript" src="../incl/myLib.js"></script>
+<script type="text/javascript" src="../js/myLib.js"></script>
 <script type="text/javascript" src="../js/admin.js"></script>
 
 </body>
