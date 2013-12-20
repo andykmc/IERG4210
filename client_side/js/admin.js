@@ -86,9 +86,6 @@
 		}
 	}
 
-	el('order_info').onmouseout = function () {
-		el('OrderInfoDetail').hide();
-	}
 	
 	el('categoryList').onclick = function(e) {
 		if (e.target.tagName != 'SPAN')
